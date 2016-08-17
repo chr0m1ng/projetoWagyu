@@ -1,4 +1,6 @@
 #include "imgloader.h"
+#include <iostream>
+
 
 ImgLoader::ImgLoader(QWidget *parent) : QWidget(parent)
 {
@@ -15,20 +17,33 @@ ImgLoader::~ImgLoader()
     delete imgOrig;
 }
 
-void ImgLoader::slotCarregar(int largura, int altura)
+void ImgLoader::slotCarregar(int largura, int altura, int nc)
 {
     caminho = QFileDialog::getOpenFileName(this, tr("Carregar Arquivo"), QDir::currentPath());
         if(!caminho.isEmpty())
         {
-            /*
-            QFile file(caminho);
-            if(!file.open(QFile::ReadOnly))
+            caminho = "./" + caminho;
+            char fileName[32] = {"./D4500.LEFT_CC.raw"};
+            ReadImage rImage(fileName, largura, altura);
+
+            st_image = rImage.vectorImage();
+            st_image.vi_bits = nc;
+
+            QImage imagem(altura, largura, QImage::Format_RGB16);
+
+            float pix;
+            QRgb pixel;
+
+            for(int i = 0; i < altura; i++)
             {
-                QMessageBox::information(this, tr("Image Viewer"),tr("Nao foi possivel carregar %1.").arg(caminho));
-                return;
+                for(int j = 0; j < largura; j++)
+                {
+                    pix = (float) st_image.vi_vector[i*altura + j];
+                    pixel = qRgb(pix, pix, pix);
+                    imagem.setPixel(i, j, pixel);
+                }
             }
-            QByteArray array = file.readAll();*/
-            QImage imagem(caminho);
+
             if( imagem.isNull() )
             {
                 QMessageBox::information(this, tr("Image Viewer"),tr("Nao foi possivel carregar %1.").arg(caminho));
@@ -45,4 +60,9 @@ void ImgLoader::slotCarregar(int largura, int altura)
 QString ImgLoader::getCaminho()
 {
     return caminho;
+}
+
+short unsigned * ImgLoader::getMatrizOrig()
+{
+    return st_image.vi_vector;
 }

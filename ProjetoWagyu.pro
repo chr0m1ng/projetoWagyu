@@ -14,9 +14,14 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    imgloader.cpp
+    imgloader.cpp \
+    hex2int.cxx \
+    readimage.cpp
 
 HEADERS  += mainwindow.h \
-    imgloader.h
+    imgloader.h \
+    hex2int.h \
+    readimage.h \
+    globalvar.h
 
 FORMS    += mainwindow.ui

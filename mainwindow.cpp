@@ -26,6 +26,7 @@ void MainWindow::carregarPress()
 {
     largura = ui->LarguraSpinBox->value();
     altura = ui->AlturaSpinBox->value();
-    loader->slotCarregar(largura, altura);
+    nc = ui->NCspinBox->value();
+    loader->slotCarregar(largura, altura, nc);
     ui->IMGTextB->setText(loader->getCaminho());
 }

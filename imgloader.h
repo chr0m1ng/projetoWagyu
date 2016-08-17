@@ -6,6 +6,7 @@
 #include <QMessageBox>
 #include <QLabel>
 #include <QString>
+#include "readimage.h"
 
 class ImgLoader : public QWidget
 {
@@ -17,10 +18,12 @@ public:
     QLabel *imgOrig;
     bool isImage;
     QString getCaminho();
-    void slotCarregar(int largura, int altura);
+    void slotCarregar(int largura, int altura, int nc);
+    unsigned short *getMatrizOrig();
 
 private:
     QString caminho;
+    tImage st_image;
 
 
 public slots:

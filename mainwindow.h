@@ -27,7 +27,7 @@ private:
     Ui::MainWindow *ui;
     int largura;
     int altura;
-
+    int nc;
 private slots:
     void carregarPress();
 
