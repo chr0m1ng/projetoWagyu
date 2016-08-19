@@ -6,6 +6,9 @@
 #include <QLabel>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QMenu>
+#include <QVBoxLayout>
+#include "guiloadimage.h"
 #include "imgloader.h"
 
 namespace Ui {
@@ -21,7 +24,8 @@ public:
     ~MainWindow();
 
     void conexoes();
-    ImgLoader *loader;
+    GUILoadImage *openFile;
+    ImgLoader *loader = NULL;
 
 
 private:
@@ -29,8 +33,15 @@ private:
     int largura;
     int altura;
     int nc;
+
+    // MenuBar
+    void createActions();
+    void createMenus();
+    QMenu *fileMenu;
+    QAction *openAct;
+
 private slots:
-    void slotCarregarPress();
+    void slotOpen();
 
 };
 

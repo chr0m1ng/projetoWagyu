@@ -30,9 +30,6 @@ void ImgLoader::carregarImg(int largura, int altura, int nc)
     }
     else
     {
-       msg.setText("Continuar..");
-       msg.exec();
-
        QByteArray array =file.readAll();
        unsigned char* Data = (unsigned char*)&array.data()[0];
        QImage img(Data,largura,altura,QImage::Format_RGB16);
