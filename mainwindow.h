@@ -20,6 +20,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    void conexoes();
     ImgLoader *loader;
 
 
@@ -29,7 +30,7 @@ private:
     int altura;
     int nc;
 private slots:
-    void carregarPress();
+    void slotCarregarPress();
 
 };
 

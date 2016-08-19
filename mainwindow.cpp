@@ -9,10 +9,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     loader = new ImgLoader;
 
-    ui->IMGscrollArea->setWidget(loader->imgOrig);
+    ui->IMGPreviewSA->setWidget(loader->imgPreview);
 
-
-    connect(ui->CarregarPb, SIGNAL(released()),this, SLOT(carregarPress()));
+    conexoes(); //Conecta a interface grafica
 
 }
 
@@ -22,11 +21,16 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::carregarPress()
+void MainWindow::conexoes()
+{
+    connect(ui->IMGCarregarPB, SIGNAL(released()),this, SLOT(slotCarregarPress())); // Botão de carregar imagem
+}
+
+void MainWindow::slotCarregarPress()
 {
     largura = ui->LarguraSpinBox->value();
     altura = ui->AlturaSpinBox->value();
     nc = ui->NCspinBox->value();
-    loader->slotCarregar(largura, altura, nc);
-    ui->IMGTextB->setText(loader->getCaminho());
+    loader->carregarImg(largura, altura, nc);
+    ui->IMGCaminhoTB->setText(loader->getCaminho());
 }

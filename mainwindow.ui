@@ -14,7 +14,7 @@
    <string>Atributos Haralick</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QScrollArea" name="IMGscrollArea">
+   <widget class="QScrollArea" name="IMGPreviewSA">
     <property name="geometry">
      <rect>
       <x>30</x>
@@ -37,7 +37,7 @@
      </property>
     </widget>
    </widget>
-   <widget class="QPushButton" name="CarregarPb">
+   <widget class="QPushButton" name="IMGCarregarPB">
     <property name="geometry">
      <rect>
       <x>270</x>
@@ -447,7 +447,7 @@
      </property>
     </widget>
    </widget>
-   <widget class="QLineEdit" name="IMGTextB">
+   <widget class="QLineEdit" name="IMGCaminhoTB">
     <property name="geometry">
      <rect>
       <x>30</x>
