@@ -1,5 +1,6 @@
 #include "imgloader.h"
-#include <iostream>
+#include <stdio.h>
+#include <math.h>
 
 
 ImgLoader::ImgLoader(QWidget *parent) : QWidget(parent)
@@ -14,68 +15,73 @@ ImgLoader::ImgLoader(QWidget *parent) : QWidget(parent)
 
 ImgLoader::~ImgLoader()
 {
+    QFile::remove("newImgRAW.pgm");
     delete imgPreview;
 }
 
 void ImgLoader::carregarImg(int largura, int altura, int nc)
 {
     caminho = QFileDialog::getOpenFileName(this, tr("Carregar Arquivo"), QDir::currentPath());
-    QMessageBox msg;
 
-    QFile file(caminho);
-    if (!file.open(QFile::ReadOnly))
+
+    if(!caminho.isEmpty())
     {
-       msg.setText("Falha ao tentar abrir o arquivo!");
-       msg.exec();
+        //Coloca ./ na frente do .raw
+        int pos = caminho.lastIndexOf("/");
+        caminho.replace(pos, 1, "/./");
+
+        //Conversão de QString para const char *
+        QByteArray ba = caminho.toLatin1();
+        const char *c_str = ba.data();
+
+        ReadImage rImage(c_str, largura, altura);
+
+        st_image = rImage.vectorImage();
+        st_image.vi_bits = nc;
+
+        //Salva vetor extraido da imagem .raw em um .txt como se fosse um .pgm
+        FILE *imgRAW = fopen("imgRAW.txt", "w");
+        if(imgRAW == NULL)
+        {
+            QMessageBox::information(this, tr("Image Viewer"),tr("Nao foi possivel carregar file %1.").arg(caminho));
+            return;
+        }
+        fprintf(imgRAW, "P2\n%d %d\n%d\n", largura, altura, (int)pow(2, nc));
+        for(int i = 0; i < altura; i++)
+            for(int j = 0; j < largura; j++)
+                fprintf(imgRAW, "%d\n", (int) st_image.vi_vector[i * altura + j]);
+        fclose(imgRAW);
+
+        //Converte o .txt para .pgm
+        QFile::rename("imgRAW.txt", "newImgRAW.pgm");
+
+        //Abre e exibe a imagem no formato .pgm
+        QImage imagem("newImgRAW.pgm", "PGM");
+        if( imagem.isNull() )
+        {
+            QMessageBox::information(this, tr("Image Viewer"),tr("Nao foi possivel carregar %1.").arg(caminho));
+            return;
+        }
+
+        imgPreview -> setPixmap(QPixmap::fromImage(imagem));
+        imgPreview -> adjustSize();
+        QString imgNome = caminho.remove(0, pos + 3);
+
+        imgPreview->setToolTip(imgNome);
+
+        status = true;
     }
+
     else
     {
-       QByteArray array =file.readAll();
-       unsigned char* Data = (unsigned char*)&array.data()[0];
-       QImage img(Data,largura,altura,QImage::Format_RGB16);
-       imgOrig = img;
-       imgPreview->setPixmap(QPixmap::fromImage(imgOrig));
-       imgPreview->adjustSize();
-
-       status = true;
+        QMessageBox::information(this, tr("Image Viewer"),tr("Nao foi possivel carregar caminho %1.").arg(caminho));
+        return;
     }
+}
 
-
-//    if(!caminho.isEmpty())
-//    {
-//        caminho = "./" + caminho;
-//        char fileName[32] = {"./D4500.LEFT_CC.raw"};
-//        ReadImage rImage(fileName, largura, altura);
-
-//        st_image = rImage.vectorImage();
-//        st_image.vi_bits = nc;
-
-//        QImage imagem(altura, largura, QImage::Format_RGB16);
-
-//        float pix;
-//        QRgb pixel;
-
-//        for(int i = 0; i < altura; i++)
-//        {
-//            for(int j = 0; j < largura; j++)
-//            {
-//                pix = (float) st_image.vi_vector[i*altura + j];
-//                pixel = qRgb(pix, pix, pix);
-//                imagem.setPixel(i, j, pixel);
-//            }
-//        }
-
-//        if( imagem.isNull() )
-//        {
-//            QMessageBox::information(this, tr("Image Viewer"),tr("Nao foi possivel carregar %1.").arg(caminho));
-//            return;
-//        }
-
-//        imgOrig -> setPixmap(QPixmap::fromImage(imagem));
-//        imgOrig -> adjustSize();
-
-//        isImage = true;
-//    }
+QLabel * ImgLoader::getImgPreview()
+{
+    return imgPreview;
 }
 
 QString ImgLoader::getCaminho()
@@ -83,12 +89,7 @@ QString ImgLoader::getCaminho()
     return caminho;
 }
 
-QImage ImgLoader::getImgOrig()
-{
-    return imgOrig;
-}
-
-bool ImgLoader::isImage()
+bool ImgLoader::getStatus()
 {
     return status;
 }

@@ -16,15 +16,17 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     imgloader.cpp \
     hex2int.cxx \
+    guiloadimage.cpp \
     readimage.cpp \
-    guiloadimage.cpp
+    haralick.cpp
 
 HEADERS  += mainwindow.h \
     imgloader.h \
     hex2int.h \
-    readimage.h \
     globalvar.h \
-    guiloadimage.h
+    guiloadimage.h \
+    readimage.h \
+    haralick.h
 
 FORMS    += mainwindow.ui \
     guiloadimage.ui

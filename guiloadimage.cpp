@@ -7,14 +7,12 @@ GUILoadImage::GUILoadImage(QWidget *parent) :
 {
     ui->setupUi(this);
     loader = new ImgLoader;
-    ui->pBconfirm->setDisabled(true);
-
     connect(ui->pBOpen, SIGNAL(released()), this, SLOT(slotGetCaminho()));
-    connect(ui->pBconfirm, SIGNAL(released()), this, SLOT(slotConfirm()));
 }
 
 GUILoadImage::~GUILoadImage()
 {
+    delete loader;
     delete ui;
 }
 
@@ -25,11 +23,11 @@ ImgLoader* GUILoadImage::getLoader()
 
 void GUILoadImage::slotGetCaminho()
 {
-    int w = ui->LarguraSpinBox->value();
-    int h = ui->AlturaSpinBox->value();
-    int gs = ui->NCspinBox->value();
+    largura = ui->LarguraSpinBox->value();
+    altura = ui->AlturaSpinBox->value();
+    nc = ui->NCspinBox->value();
 
-    bool status = ((w > 0) && (h > 0)) && (gs > 0);
+    bool status = ((altura > 0) && (largura > 0)) && (nc > 0);
 
     QMessageBox msg;
 
@@ -40,14 +38,8 @@ void GUILoadImage::slotGetCaminho()
     }
     else
     {
-        loader->carregarImg(w,h,gs);
-        this->caminho = loader->getCaminho();
-        ui->lineCaminho->setText(this->caminho);
-        ui->pBconfirm->setEnabled(true);
+        loader->carregarImg(largura, altura, nc);
+        ui->lineCaminho->setText(loader->getCaminho());
+        this->close();
     }
-}
-
-void GUILoadImage::slotConfirm()
-{
-    this->close();
 }

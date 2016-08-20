@@ -24,11 +24,13 @@ public:
 private:
     Ui::GUILoadImage *ui;
     ImgLoader *loader = NULL;
-    QString caminho;
+
+    int largura;
+    int altura;
+    int nc;
 
 private slots:
     void slotGetCaminho();
-    void slotConfirm();
 
 };
 

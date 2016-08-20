@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Abrir Nova Imagem</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QFrame" name="FrameDdI">
@@ -158,7 +158,7 @@
    <widget class="QPushButton" name="pBOpen">
     <property name="geometry">
      <rect>
-      <x>260</x>
+      <x>370</x>
       <y>160</y>
       <width>111</width>
       <height>31</height>
@@ -168,25 +168,12 @@
      <string>Abrir</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pBconfirm">
-    <property name="geometry">
-     <rect>
-      <x>380</x>
-      <y>160</y>
-      <width>111</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Confirmar</string>
-    </property>
-   </widget>
    <widget class="QLineEdit" name="lineCaminho">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>160</y>
-      <width>241</width>
+      <width>341</width>
       <height>30</height>
      </rect>
     </property>

@@ -15,19 +15,18 @@ public:
     explicit ImgLoader(QWidget *parent = 0);
     ~ImgLoader();
 
-// Variaveis
-
-    QLabel *imgPreview = NULL;
 
 // Metodos
-
     QString getCaminho();
-    QImage getImgOrig();
-    bool isImage();
+    bool getStatus();
     void carregarImg(int largura, int altura, int nc);
     unsigned short *getMatrizOrig();
+    QLabel * getImgPreview();
 
 private:
+
+// Variaveis
+    QLabel *imgPreview = NULL;
     bool status;
     QString caminho;
     QImage imgOrig;

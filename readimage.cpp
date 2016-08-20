@@ -8,15 +8,13 @@
 
 using namespace std;
 
-ReadImage::ReadImage(QString fileName, unsigned short int width, unsigned short int length)
+ReadImage::ReadImage(const char *fileName, unsigned short int width, unsigned short int length)
 {
-    string str = fileName.toStdString();
-    const char * caminho = str.c_str();
-    this->fileName = caminho;
+    this->fileName = fileName;
     this->coluna = width;
     this->linha = length;
 
-//    cout << fileName << endl;
+    cout << fileName << endl;
 }
 
 tImage ReadImage::vectorImage() {
@@ -33,8 +31,8 @@ tImage ReadImage::vectorImage() {
     for ( long int i = 0; i < (st_image.vi_coluna * st_image.vi_linha) ; i++ ) { //&& !fp.eof()
         fp.read(vc_bitsvalue, 2 * sizeof(char) );
         st_image.vi_vector[i] = (unsigned short) hex2int(vc_bitsvalue);
-        if (st_image.vi_vector[i] > 4095)
-            cout << i << " -> " << st_image.vi_vector[i] << endl;
+        //if (st_image.vi_vector[i] > 4095)
+          //  cout << i << " -> " << st_image.vi_vector[i] << endl;
         //cout << st_image.vi_vector[i] << endl;
     }
 
@@ -76,4 +74,3 @@ tImage ReadImage::vectorImage_() {
 
     return st_image;
 }
-

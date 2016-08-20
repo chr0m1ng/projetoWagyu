@@ -6,160 +6,19 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1021</width>
-    <height>398</height>
+    <width>942</width>
+    <height>420</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Atributos Haralick</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QFrame" name="FrameROI">
-    <property name="geometry">
-     <rect>
-      <x>430</x>
-      <y>20</y>
-      <width>241</width>
-      <height>131</height>
-     </rect>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
-    </property>
-    <widget class="QLabel" name="ROILabel">
-     <property name="geometry">
-      <rect>
-       <x>40</x>
-       <y>0</y>
-       <width>161</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>REGIÃO DE INTERESSE</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="LarguraLb">
-     <property name="geometry">
-      <rect>
-       <x>160</x>
-       <y>40</y>
-       <width>66</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Largura</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="AlturaLb">
-     <property name="geometry">
-      <rect>
-       <x>160</x>
-       <y>90</y>
-       <width>66</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Altura</string>
-     </property>
-    </widget>
-    <widget class="QSpinBox" name="LarguraSpinBox">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>30</y>
-       <width>130</width>
-       <height>30</height>
-      </rect>
-     </property>
-     <property name="minimum">
-      <number>1</number>
-     </property>
-     <property name="maximum">
-      <number>999999</number>
-     </property>
-     <property name="value">
-      <number>4201</number>
-     </property>
-    </widget>
-    <widget class="QSpinBox" name="AlturaSpinBox">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>80</y>
-       <width>130</width>
-       <height>30</height>
-      </rect>
-     </property>
-     <property name="minimum">
-      <number>1</number>
-     </property>
-     <property name="maximum">
-      <number>999999</number>
-     </property>
-     <property name="value">
-      <number>1831</number>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QFrame" name="FrameNC">
-    <property name="geometry">
-     <rect>
-      <x>430</x>
-      <y>180</y>
-      <width>241</width>
-      <height>71</height>
-     </rect>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
-    </property>
-    <widget class="QLabel" name="NCLabel">
-     <property name="geometry">
-      <rect>
-       <x>60</x>
-       <y>0</y>
-       <width>121</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>NIVEIS DE CINZA</string>
-     </property>
-    </widget>
-    <widget class="QSpinBox" name="NCspinBox">
-     <property name="geometry">
-      <rect>
-       <x>40</x>
-       <y>30</y>
-       <width>160</width>
-       <height>30</height>
-      </rect>
-     </property>
-     <property name="minimum">
-      <number>1</number>
-     </property>
-     <property name="maximum">
-      <number>64</number>
-     </property>
-     <property name="value">
-      <number>12</number>
-     </property>
-    </widget>
-   </widget>
    <widget class="QFrame" name="FrameDMCO">
     <property name="geometry">
      <rect>
-      <x>430</x>
-      <y>280</y>
+      <x>680</x>
+      <y>20</y>
       <width>241</width>
       <height>71</height>
      </rect>
@@ -203,7 +62,7 @@
    <widget class="QFrame" name="FrameATH">
     <property name="geometry">
      <rect>
-      <x>750</x>
+      <x>400</x>
       <y>20</y>
       <width>231</width>
       <height>331</height>
@@ -454,8 +313,8 @@
       <rect>
        <x>140</x>
        <y>0</y>
-       <width>59</width>
-       <height>14</height>
+       <width>71</width>
+       <height>16</height>
       </rect>
      </property>
      <property name="text">
@@ -463,18 +322,30 @@
      </property>
     </widget>
    </widget>
+   <widget class="QPushButton" name="extrairPb">
+    <property name="geometry">
+     <rect>
+      <x>790</x>
+      <y>320</y>
+      <width>131</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Extrair Atributos</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1021</width>
-     <height>19</height>
+     <width>942</width>
+     <height>28</height>
     </rect>
    </property>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
   <action name="actionAbrir">
    <property name="text">
     <string>Abrir...</string>

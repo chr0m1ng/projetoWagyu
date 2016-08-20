@@ -10,6 +10,7 @@
 #include <QVBoxLayout>
 #include "guiloadimage.h"
 #include "imgloader.h"
+#include "haralick.h"
 
 namespace Ui {
 class MainWindow;
@@ -23,16 +24,12 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+private:
+    Ui::MainWindow *ui;
+
     void conexoes();
     GUILoadImage *openFile;
     ImgLoader *loader = NULL;
-
-
-private:
-    Ui::MainWindow *ui;
-    int largura;
-    int altura;
-    int nc;
 
     // MenuBar
     void createActions();
@@ -42,6 +39,23 @@ private:
 
 private slots:
     void slotOpen();
+    void slotExtracao();
+
+    //Slots CheckBox
+    void slotSel();
+    void slotATH01();
+    void slotATH02();
+    void slotATH03();
+    void slotATH04();
+    void slotATH05();
+    void slotATH06();
+    void slotATH07();
+    void slotATH08();
+    void slotATH09();
+    void slotATH10();
+    void slotATH11();
+    void slotATH12();
+    void slotATH13();
 
 };
 
