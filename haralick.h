@@ -27,7 +27,7 @@ private:
     int distancia;
     unsigned short *matrizImg;
 
-    static double mediaH(const double * __restrict__ p, int tam);
+    double mediaH(const double * __restrict__ p, int tam);
 
     void mc0_(unsigned short* mIMG, int i, int j, int* matrizCoTmp);
     void mc45_(unsigned short* mIMG, int i, int j, int* matrizCoTmp);

@@ -1,7 +1,7 @@
 #include "imgloader.h"
 #include <stdio.h>
 #include <math.h>
-
+#include <omp.h>
 
 ImgLoader::ImgLoader(QWidget *parent) : QWidget(parent)
 {
