@@ -7,7 +7,6 @@ ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     openFile = new GUILoadImage;
-    conexoes(); //Conecta a interface grafica
 
     ui->extrairPb->setEnabled(false);
 
@@ -15,6 +14,9 @@ ui(new Ui::MainWindow)
     createActions();
     createMenus();
 // Fim MENU BAR
+// Cria GUI PRINCIPAL
+    createGUI();
+    conexoes(); //Conecta a interface grafica
 }
 
 MainWindow::~MainWindow()
@@ -27,68 +29,12 @@ MainWindow::~MainWindow()
 
 void MainWindow::conexoes()
 {
-    //Conexão das CheckBox
-    connect(ui->SelTodos, SIGNAL(clicked()), this, SLOT(slotSel()));
-    connect(ui->ATH01, SIGNAL(clicked()), this, SLOT(slotATH01()));
-    connect(ui->ATH02, SIGNAL(clicked()), this, SLOT(slotATH02()));
-    connect(ui->ATH03, SIGNAL(clicked()), this, SLOT(slotATH03()));
-    connect(ui->ATH04, SIGNAL(clicked()), this, SLOT(slotATH04()));
-    connect(ui->ATH05, SIGNAL(clicked()), this, SLOT(slotATH05()));
-    connect(ui->ATH06, SIGNAL(clicked()), this, SLOT(slotATH06()));
-    connect(ui->ATH07, SIGNAL(clicked()), this, SLOT(slotATH07()));
-    connect(ui->ATH08, SIGNAL(clicked()), this, SLOT(slotATH08()));
-    connect(ui->ATH09, SIGNAL(clicked()), this, SLOT(slotATH09()));
-    connect(ui->ATH10, SIGNAL(clicked()), this, SLOT(slotATH10()));
-    connect(ui->ATH11, SIGNAL(clicked()), this, SLOT(slotATH11()));
-    connect(ui->ATH12, SIGNAL(clicked()), this, SLOT(slotATH12()));
-    connect(ui->ATH13, SIGNAL(clicked()), this, SLOT(slotATH13()));
+
+    connect(caixasDeSelecao[0], SIGNAL(clicked()), this, SLOT(slotSel()));
+    for(int i = 1; i < 14; i++)
+        connect(caixasDeSelecao[i], SIGNAL(clicked()), this, SLOT(slotATH()));
 
     connect(ui->extrairPb, SIGNAL(released()), this, SLOT(slotExtracao()));
-}
-
-void MainWindow::slotSel()
-{
-    if(ui->SelTodos->isChecked())
-    {
-        ui->ATH01->setChecked(true);
-        ui->ATH02->setChecked(true);
-        ui->ATH03->setChecked(true);
-        ui->ATH04->setChecked(true);
-        ui->ATH05->setChecked(true);
-        ui->ATH06->setChecked(true);
-        ui->ATH07->setChecked(true);
-        ui->ATH08->setChecked(true);
-        ui->ATH09->setChecked(true);
-        ui->ATH10->setChecked(true);
-        ui->ATH11->setChecked(true);
-        ui->ATH12->setChecked(true);
-        ui->ATH13->setChecked(true);
-    }
-
-    else
-    {
-        ui->ATH01->setChecked(false);
-        ui->ATH02->setChecked(false);
-        ui->ATH03->setChecked(false);
-        ui->ATH04->setChecked(false);
-        ui->ATH05->setChecked(false);
-        ui->ATH06->setChecked(false);
-        ui->ATH07->setChecked(false);
-        ui->ATH08->setChecked(false);
-        ui->ATH09->setChecked(false);
-        ui->ATH10->setChecked(false);
-        ui->ATH11->setChecked(false);
-        ui->ATH12->setChecked(false);
-        ui->ATH13->setChecked(false);
-    }
-}
-
-void MainWindow::slotOpen()
-{
-    openFile->show();
-    loader = openFile->getLoader();
-    ui->IMGPreviewSA->setWidget(loader->getImgPreview());
-    ui->extrairPb->setEnabled(true);
 }
 
 void MainWindow::createActions()
@@ -105,6 +51,110 @@ void MainWindow::createMenus()
     fileMenu->addAction(openAct);
 }
 
+void MainWindow::createBoxes()
+{
+
+    for(int i = 0, h = 30; i < 14; i++, h += 20)
+    {
+        caixasDeSelecao[i] = new QCheckBox(nomesATH[i], frameATH);
+        caixasDeSelecao[i]->setVisible(true);
+        caixasDeSelecao[i]->setGeometry(10,h,191,25);
+        caixasDeSelecao[i]->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+    }
+}
+
+void MainWindow::createGUI()
+{
+    createPreview();
+    createATH();
+    createDMCO();
+}
+
+void MainWindow::createPreview()
+{
+    framePreview = new QFrame(this->centralWidget());
+    framePreview->setEnabled(true);
+    framePreview->setGeometry(20,20,331,331);
+    framePreview->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    framePreview->setLineWidth(1);
+    framePreview->setFrameShadow(QFrame::Raised);
+    framePreview->setFrameShape(QFrame::StyledPanel);
+    framePreview->setVisible(true);
+
+    labelPreview = new QLabel(framePreview);
+    labelPreview->setText("PREVIEW");
+    labelPreview->setGeometry(140,0,71,16);
+    labelPreview->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    labelPreview->setVisible(true);
+
+    areaPreview = new QScrollArea(framePreview);
+    areaPreview->setGeometry(10,20,311,301);
+    areaPreview->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    areaPreview->setFrameShadow(QFrame::Sunken);
+    areaPreview->setFrameShape(QFrame::StyledPanel);
+    areaPreview->setWidgetResizable(true);
+
+}
+
+void MainWindow::createATH()
+{
+    frameATH = new QFrame(this->centralWidget());
+    frameATH->setEnabled(true);
+    frameATH->setGeometry(400,20,231,331);
+    frameATH->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    frameATH->setLineWidth(1);
+    frameATH->setFrameShadow(QFrame::Raised);
+    frameATH->setFrameShape(QFrame::StyledPanel);
+    frameATH->setVisible(true);
+
+    labelATH = new QLabel(frameATH);
+    labelATH->setText("ATRIBUTOS DE TEXTURA");
+    labelATH->setGeometry(40,0,171,16);
+    labelATH->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    labelATH->setVisible(true);
+
+    createBoxes();
+}
+
+void MainWindow::createDMCO()
+{
+    frameDMCO = new QFrame(this->centralWidget());
+    frameDMCO->setEnabled(true);
+    frameDMCO->setGeometry(680,20, 241,71);
+    frameDMCO->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    frameDMCO->setLineWidth(1);
+    frameDMCO->setFrameShadow(QFrame::Raised);
+    frameDMCO->setFrameShape(QFrame::StyledPanel);
+    frameDMCO->setVisible(true);
+
+    labelDMCO = new QLabel(frameDMCO);
+    labelDMCO->setText("DISTANCIA MCO");
+    labelDMCO->setGeometry(60,0,121,16);
+    labelDMCO->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    labelDMCO->setToolTip("Distancia Matriz de Coocorrencia");
+    labelDMCO->setVisible(true);
+
+    caixaDMCO = new QSpinBox(frameDMCO);
+    caixaDMCO->setEnabled(true);
+    caixaDMCO->setGeometry(40,30,160,30);
+    caixaDMCO->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Fixed);
+    caixaDMCO->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
+    caixaDMCO->setKeyboardTracking(true);
+    caixaDMCO->setMinimum(1);
+    caixaDMCO->setMaximum(99999);
+    caixaDMCO->setVisible(true);
+}
+
+// SLOTS
+
+void MainWindow::slotOpen()
+{
+    openFile->show();
+    loader = openFile->getLoader();
+    areaPreview->setWidget(loader->getImgPreview());
+    ui->extrairPb->setEnabled(true);
+}
+
 void MainWindow::slotExtracao()
 {
     if(loader->getStatus())
@@ -112,77 +162,28 @@ void MainWindow::slotExtracao()
         int NG = pow(2, openFile->getNc());
         matrizCoN_CPU = new double[NG * NG];
         ath = new Haralick(loader->getMatrizOrig(), openFile->getLargura(), openFile->getAltura(), openFile->getNc());
-        ath->calcularMatrizCoN(matrizCoN_CPU, ui->DMCOspinBox->value());
+        ath->calcularMatrizCoN(matrizCoN_CPU, caixaDMCO->value());
         ath->atCpu(matrizCoN_CPU, NG);
-        if(ui->ATH01->isChecked())
+        //results->open();
+        if(caixasDeSelecao[1]->isChecked())
         {
             std::cout << "Energia: " << ath->energia() << std::endl;
         }
     }
 }
 
-void MainWindow::slotATH01()
+void MainWindow::slotSel()
 {
-    if(ui->SelTodos->isChecked())
-        ui->SelTodos->setChecked(false);
+    if(caixasDeSelecao[0]->isChecked())
+        for(int i = 1; i < 14; i++)
+            caixasDeSelecao[i]->setChecked(true);
+    else
+        for(int i = 1; i < 14; i++)
+            caixasDeSelecao[i]->setChecked(false);
 }
-void MainWindow::slotATH02()
+
+void MainWindow::slotATH()
 {
-    if(ui->SelTodos->isChecked())
-        ui->SelTodos->setChecked(false);
-}
-void MainWindow::slotATH03()
-{
-    if(ui->SelTodos->isChecked())
-        ui->SelTodos->setChecked(false);
-}
-void MainWindow::slotATH04()
-{
-    if(ui->SelTodos->isChecked())
-        ui->SelTodos->setChecked(false);
-}
-void MainWindow::slotATH05()
-{
-    if(ui->SelTodos->isChecked())
-        ui->SelTodos->setChecked(false);
-}
-void MainWindow::slotATH06()
-{
-    if(ui->SelTodos->isChecked())
-        ui->SelTodos->setChecked(false);
-}
-void MainWindow::slotATH07()
-{
-    if(ui->SelTodos->isChecked())
-        ui->SelTodos->setChecked(false);
-}
-void MainWindow::slotATH08()
-{
-    if(ui->SelTodos->isChecked())
-        ui->SelTodos->setChecked(false);
-}
-void MainWindow::slotATH09()
-{
-    if(ui->SelTodos->isChecked())
-        ui->SelTodos->setChecked(false);
-}
-void MainWindow::slotATH10()
-{
-    if(ui->SelTodos->isChecked())
-        ui->SelTodos->setChecked(false);
-}
-void MainWindow::slotATH11()
-{
-    if(ui->SelTodos->isChecked())
-        ui->SelTodos->setChecked(false);
-}
-void MainWindow::slotATH12()
-{
-    if(ui->SelTodos->isChecked())
-        ui->SelTodos->setChecked(false);
-}
-void MainWindow::slotATH13()
-{
-    if(ui->SelTodos->isChecked())
-        ui->SelTodos->setChecked(false);
+    if(caixasDeSelecao[0]->isChecked())
+        caixasDeSelecao[0]->setChecked(false);
 }

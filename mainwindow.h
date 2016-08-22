@@ -6,8 +6,9 @@
 #include <QLabel>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QCheckBox>
 #include <QMenu>
-#include <QVBoxLayout>
+#include <QSpinBox>
 #include <cmath>
 #include "guiloadimage.h"
 #include "imgloader.h"
@@ -33,13 +34,39 @@ private:
     void conexoes();
     GUILoadImage *openFile;
     ImgLoader *loader = NULL;
+    bool atributos[13];
 
-    // MenuBar
-    void createActions();
-    void createMenus();
-    QMenu *fileMenu;
-    QAction *openAct;
-    Haralick *ath;
+    // GUI
+        // MenuBar
+        void createActions();
+        void createMenus();
+        QMenu *fileMenu;
+        QAction *openAct;
+        Haralick *ath;
+
+        // GuiPrincipal
+        void createGUI();
+        void createPreview();
+        void createATH();
+        void createDMCO();
+        QFrame *framePreview;
+        QFrame *frameATH;
+        QFrame *frameDMCO;
+        QLabel *labelPreview;
+        QLabel *labelATH;
+        QLabel *labelDMCO;
+        QScrollArea *areaPreview;
+        QSpinBox *caixaDMCO;
+        //CheckBox
+        QString nomesATH[14] = {"Selecionar Todos", "Energia",
+                               "Contraste", "Correlação",
+                               "Variancia", "MDI",
+                               "Media Soma", "Variancia Soma",
+                               "Entropia Soma", "Entropia",
+                               "Variancia Diferença", "Entropia Diferença",
+                               "Medidas Correlação 1", "Medidas Correlação 2"};
+        QCheckBox *caixasDeSelecao[14];
+        void createBoxes();
 
 private slots:
     void slotOpen();
@@ -47,19 +74,7 @@ private slots:
 
     //Slots CheckBox
     void slotSel();
-    void slotATH01();
-    void slotATH02();
-    void slotATH03();
-    void slotATH04();
-    void slotATH05();
-    void slotATH06();
-    void slotATH07();
-    void slotATH08();
-    void slotATH09();
-    void slotATH10();
-    void slotATH11();
-    void slotATH12();
-    void slotATH13();
+    void slotATH();
 
 };
 
