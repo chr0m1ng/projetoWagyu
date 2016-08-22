@@ -17,7 +17,7 @@ public:
         this->matrizImg = matrizImg;
         this->altura = altura;
         this->largura = largura;
-        this->Ng = pow(2, nc);
+        this->Ng = (int) pow(2, nc);
     }
     ~Haralick();
 
@@ -25,7 +25,7 @@ private:
     int Ng;
     int altura, largura;
     int distancia;
-    unsigned short *matrizImg;
+    unsigned short * matrizImg;
 
     double mediaH(const double * __restrict__ p, int tam);
 
@@ -37,9 +37,13 @@ private:
     double P_x_mais_y(const double * __restrict__ p, const int k, int tam);
     double P_x_menos_y(const double * __restrict__ p, const int k, int tam);
 
-    void calcularMatrizCoN(double* matrizCoN, int distancia);
 
     double *matriz;
+
+
+public:
+
+    void calcularMatrizCoN(double* matrizCoN, int distancia);
 
     void atCpu(double *matriz, int tam)
     {

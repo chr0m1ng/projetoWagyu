@@ -20,6 +20,9 @@ public:
     explicit GUILoadImage(QWidget *parent = 0);
     ~GUILoadImage();
     ImgLoader* getLoader();
+    int getLargura();
+    int getAltura();
+    int getNc();
 
 private:
     Ui::GUILoadImage *ui;

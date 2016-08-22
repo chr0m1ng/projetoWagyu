@@ -31,6 +31,7 @@ HEADERS  += mainwindow.h \
 FORMS    += mainwindow.ui \
     guiloadimage.ui
 
+QMAKE_CXXFLAGS += -fopenmp
 QMAKE_CFLAGS_RELEASE += -fopenmp
 QMAKE_CFLAGS_DEBUG += -fopenmp
 LIBS += -fopenmp

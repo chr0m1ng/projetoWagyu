@@ -87,11 +87,8 @@ void MainWindow::slotOpen()
 {
     openFile->show();
     loader = openFile->getLoader();
-    if(loader->getStatus())
-    {
-        ui->IMGPreviewSA->setWidget(loader->getImgPreview());
-        ui->extrairPb->setEnabled(true);
-    }
+    ui->IMGPreviewSA->setWidget(loader->getImgPreview());
+    ui->extrairPb->setEnabled(true);
 }
 
 void MainWindow::createActions()
@@ -110,7 +107,18 @@ void MainWindow::createMenus()
 
 void MainWindow::slotExtracao()
 {
-
+    if(loader->getStatus())
+    {
+        int NG = pow(2, openFile->getNc());
+        matrizCoN_CPU = new double[NG * NG];
+        ath = new Haralick(loader->getMatrizOrig(), openFile->getLargura(), openFile->getAltura(), openFile->getNc());
+        ath->calcularMatrizCoN(matrizCoN_CPU, ui->DMCOspinBox->value());
+        ath->atCpu(matrizCoN_CPU, NG);
+        if(ui->ATH01->isChecked())
+        {
+            std::cout << "Energia: " << ath->energia() << std::endl;
+        }
+    }
 }
 
 void MainWindow::slotATH01()

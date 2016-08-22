@@ -32,7 +32,6 @@ private:
     QImage imgOrig;
     tImage st_image;
 
-
 public slots:
 
 };

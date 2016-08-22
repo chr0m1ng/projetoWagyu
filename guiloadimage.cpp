@@ -43,3 +43,18 @@ void GUILoadImage::slotGetCaminho()
         this->close();
     }
 }
+
+int GUILoadImage::getLargura()
+{
+    return largura;
+}
+
+int GUILoadImage::getAltura()
+{
+    return altura;
+}
+
+int GUILoadImage::getNc()
+{
+    return nc;
+}
