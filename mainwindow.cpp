@@ -7,7 +7,7 @@ ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     openFile = new GUIImageLoader();
-    results = new GUIResult();
+    results = new GUIResults();
     createGUI();
 
     ui->extrairPb->setEnabled(false);
@@ -68,12 +68,20 @@ void MainWindow::createActions()
     openAct->setShortcut(QKeySequence::Open);
     openAct->setStatusTip(tr("Carregar uma nova imagem"));
     connect(openAct, SIGNAL(triggered()), this, SLOT(slotOpen()));
+
+    resultAct = new QAction(tr("&Exibir"), this);
+    resultAct->setStatusTip(tr("Exibir resultados dos ATH calculados"));
+    resultAct->setEnabled(false);
+    connect(resultAct, SIGNAL(triggered()), this, SLOT(slotResult()));
 }
 
 void MainWindow::createMenu()
 {
     fileMenu = menuBar()->addMenu(tr("&Arquivo"));
     fileMenu->addAction(openAct);
+
+    resultsMenu = menuBar()->addMenu(tr("&Resultados"));
+    resultsMenu->addAction(resultAct);
 }
 
 void MainWindow::createGUI()
@@ -220,6 +228,11 @@ void MainWindow::slotOpen()
     frameNT->setEnabled(true);
 }
 
+void MainWindow::slotResult()
+{
+    results->exec();
+}
+
 void MainWindow::slotExtracao()
 {
     for(int i = 1; i < 14; i++)
@@ -243,6 +256,8 @@ void MainWindow::slotExtracao()
             std::cout << nomesATH[i].toStdString() + " " << atributosSelecionados[i] << std::endl;
         }
     }
+    results->setAtributos(atributosSelecionados, nomesATH);
+    resultAct->setEnabled(true);
 }
 
 void MainWindow::slotSelectAll()

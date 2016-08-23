@@ -12,7 +12,7 @@
 #include <QMenu>
 #include <cmath>
 #include "guiimageloader.h"
-#include "guiresult.h"
+#include "guiresults.h"
 #include "imgloader.h"
 #include "haralick.h"
 
@@ -31,7 +31,7 @@ public:
 private:
     Ui::MainWindow *ui;
     GUIImageLoader *openFile;
-    GUIResult *results;
+    GUIResults *results;
     ImgLoader *loader;
     double * matrizCoN_CPU;
     double *atributosSelecionados = new double[14];
@@ -41,7 +41,9 @@ private:
         void createActions();
         void createMenu();
         QMenu *fileMenu;
+        QMenu *resultsMenu;
         QAction *openAct;
+        QAction *resultAct;
         Haralick *ath;
 
         // GuiPrincipal
@@ -75,6 +77,7 @@ private:
 
 private slots:
     void slotOpen();
+    void slotResult();
     void slotExtracao();
 
     //Slots CheckBox

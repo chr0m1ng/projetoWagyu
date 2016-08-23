@@ -18,8 +18,8 @@ SOURCES += main.cpp\
     hex2int.cxx \
     readimage.cpp \
     haralick.cpp \
-    guiresult.cpp \
-    guiimageloader.cpp
+    guiimageloader.cpp \
+    guiresults.cpp
 
 HEADERS  += mainwindow.h \
     imgloader.h \
@@ -27,12 +27,12 @@ HEADERS  += mainwindow.h \
     globalvar.h \
     readimage.h \
     haralick.h \
-    guiresult.h \
-    guiimageloader.h
+    guiimageloader.h \
+    guiresults.h
 
 FORMS    += mainwindow.ui \
-    guiresult.ui \
-    guiimageloader.ui
+    guiimageloader.ui \
+    guiresults.ui
 
 QMAKE_CXXFLAGS += -fopenmp
 QMAKE_CFLAGS_RELEASE += -fopenmp
