@@ -23,7 +23,6 @@ void ImgLoader::carregarImg(int largura, int altura, int nc)
 {
     caminho = QFileDialog::getOpenFileName(this, tr("Carregar Arquivo"), QDir::currentPath());
 
-
     if(!caminho.isEmpty())
     {
         //Coloca ./ na frente do .raw
@@ -64,7 +63,7 @@ void ImgLoader::carregarImg(int largura, int altura, int nc)
         }
 
         imgPreview -> setPixmap(QPixmap::fromImage(imagem));
-        imgPreview -> adjustSize();
+        //imgPreview -> adjustSize();
         QString imgNome = caminho.remove(0, pos + 3);
 
         imgPreview->setToolTip(imgNome);

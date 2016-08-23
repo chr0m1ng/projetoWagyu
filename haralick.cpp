@@ -5,7 +5,7 @@ Haralick::~Haralick()
 
 }
 
-void Haralick::calcularMatrizCoN(double * __restrict__ matrizCoN, int distancia, int ntrds)
+void Haralick::calcularMatrizCoN(double * __restrict__ matrizCoN, int distancia)
 {
     int imgLin = this->altura;
     int imgCol = this->largura;
@@ -194,6 +194,56 @@ double Haralick::P_x_menos_y(const double * __restrict__ p, const int k, int tam
 /*
  * Haralick
  */
+
+void Haralick::calcATH(double *&atributosSelecionados)
+{
+    for(int i = 1; i < 14; i++)
+    {
+        switch ((int)atributosSelecionados[i]) {
+        case 1:
+            atributosSelecionados[i] = (double)energia();
+            break;
+        case 2:
+            atributosSelecionados[i] = (double)contraste();
+            break;
+        case 3:
+            atributosSelecionados[i] = (double)correlacao();
+            break;
+        case 4:
+            atributosSelecionados[i] = (double)variancia();
+            break;
+        case 5:
+            atributosSelecionados[i] = (double)mdi();
+            break;
+        case 6:
+            atributosSelecionados[i] = (double)mediaSoma();
+            break;
+        case 7:
+            atributosSelecionados[i] = (double)varianciaSoma();
+            break;
+        case 8:
+            atributosSelecionados[i] = (double)somaEntropia();
+            break;
+        case 9:
+            atributosSelecionados[i] = (double)entropia();
+            break;
+        case 10:
+            atributosSelecionados[i] = (double)varianciaDiferenca();
+            break;
+        case 11:
+            atributosSelecionados[i] = (double)diferencaEntropia();
+            break;
+        case 12:
+            atributosSelecionados[i] = (double)medidasCorrelacao1();
+            break;
+        case 13:
+            atributosSelecionados[i] = (double)medidasCorrelacao2();
+            break;
+        default:
+            break;
+        }
+    }
+}
 
 double Haralick::energia()
 {

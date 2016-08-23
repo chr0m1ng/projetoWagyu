@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Abrir Imagem</string>
   </property>
   <widget class="QFrame" name="FrameDdI">
    <property name="geometry">

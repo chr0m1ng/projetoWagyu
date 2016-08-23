@@ -23,6 +23,7 @@ ImgLoader* GUIImageLoader::getLoader()
 
 void GUIImageLoader::slotGetCaminho()
 {
+    QMessageBox::warning(this,"Aviso!","Talvez uma mensagem de que o programa parou de responder seja exibida, apenas ignore.",1,0,0);
     largura = ui->LarguraSpinBox->value();
     altura = ui->AlturaSpinBox->value();
     nc = ui->NCspinBox->value();

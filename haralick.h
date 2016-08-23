@@ -12,12 +12,13 @@
 class Haralick
 {
 public:
-    Haralick(unsigned short * matrizImg, int largura, int altura, int nc)
+    Haralick(unsigned short * matrizImg, int largura, int altura, int nc, int ntrds)
     {
         this->matrizImg = matrizImg;
         this->altura = altura;
         this->largura = largura;
         this->Ng = (int) pow(2, nc);
+        this->ntrds = ntrds;
     }
     ~Haralick();
 
@@ -25,6 +26,7 @@ private:
     int Ng;
     int altura, largura;
     int distancia;
+    int ntrds;
     unsigned short * matrizImg;
 
     double mediaH(const double * __restrict__ p, int tam);
@@ -43,13 +45,15 @@ private:
 
 public:
 
-    void calcularMatrizCoN(double* matrizCoN, int distancia, int ntrds);
+    void calcularMatrizCoN(double* matrizCoN, int distancia);
 
     void atCpu(double *matriz, int tam)
     {
             this->matriz = matriz;
             this->Ng = tam;
     }
+
+    void calcATH(double *&);
 
     double energia(); // f1
     double contraste(); // f2

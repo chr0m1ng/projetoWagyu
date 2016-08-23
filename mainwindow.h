@@ -34,7 +34,7 @@ private:
     GUIResult *results;
     ImgLoader *loader;
     double * matrizCoN_CPU;
-    bool atributosSelecionados[13];
+    double *atributosSelecionados = new double[14];
 
     // GUI
         // MenuBar

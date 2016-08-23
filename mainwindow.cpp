@@ -211,11 +211,7 @@ void MainWindow::createNT()
 
 void MainWindow::slotOpen()
 {
-    //openFile->show();
     openFile->exec();
-//    QEventLoop loop;
-//    connect(this, SIGNAL(destroyed()), &loop, SLOT(quit()));
-//    loop.exec();
     loader = openFile->getLoader();
     areaPreview->setWidget(loader->getImgPreview());
     ui->extrairPb->setEnabled(true);
@@ -228,19 +224,23 @@ void MainWindow::slotExtracao()
 {
     for(int i = 1; i < 14; i++)
     {
-        atributosSelecionados[i-1] = caixasDeSelecao[i]->isChecked();
+        if(caixasDeSelecao[i]->isChecked())
+            atributosSelecionados[i] = i;
+        else
+            atributosSelecionados[i] = -2;
     }
 
     if(loader->getStatus())
     {
         int NG = pow(2, openFile->getNc());
         matrizCoN_CPU = new double[NG * NG];
-        ath = new Haralick(loader->getMatrizOrig(), openFile->getLargura(), openFile->getAltura(), openFile->getNc());
-        ath->calcularMatrizCoN(matrizCoN_CPU, caixaDMCO->value(), caixaNT->value());
+        ath = new Haralick(loader->getMatrizOrig(), openFile->getLargura(), openFile->getAltura(), openFile->getNc(), caixaNT->value());
+        ath->calcularMatrizCoN(matrizCoN_CPU, caixaDMCO->value());
         ath->atCpu(matrizCoN_CPU, NG);
-        if(caixasDeSelecao[1]->isChecked())
+        ath->calcATH(atributosSelecionados);
+        for(int i = 1; i < 14; i++)
         {
-            std::cout << "Energia: " << ath->energia() << std::endl;
+            std::cout << nomesATH[i].toStdString() + " " << atributosSelecionados[i] << std::endl;
         }
     }
 }

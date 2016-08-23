@@ -6,6 +6,8 @@
 #include <QMessageBox>
 #include <QLabel>
 #include <QString>
+#include <iostream>
+#include <string.h>
 #include "readimage.h"
 
 class ImgLoader : public QWidget
