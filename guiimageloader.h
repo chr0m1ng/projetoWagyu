@@ -1,7 +1,7 @@
-#ifndef GUILOADIMAGE_H
-#define GUILOADIMAGE_H
+#ifndef GUIIMAGELOADER_H
+#define GUIIMAGELOADER_H
 
-#include <QMainWindow>
+#include <QDialog>
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QScrollArea>
@@ -9,23 +9,23 @@
 #include "imgloader.h"
 
 namespace Ui {
-class GUILoadImage;
+class GUIImageLoader;
 }
 
-class GUILoadImage : public QMainWindow
+class GUIImageLoader : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit GUILoadImage(QWidget *parent = 0);
-    ~GUILoadImage();
+    explicit GUIImageLoader(QWidget *parent = 0);
+    ~GUIImageLoader();
     ImgLoader* getLoader();
     int getLargura();
     int getAltura();
     int getNc();
 
 private:
-    Ui::GUILoadImage *ui;
+    Ui::GUIImageLoader *ui;
     ImgLoader *loader = NULL;
 
     int largura;
@@ -37,4 +37,4 @@ private slots:
 
 };
 
-#endif // GUILOADIMAGE_H
+#endif // GUILoadImage_H

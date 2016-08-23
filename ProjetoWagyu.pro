@@ -16,20 +16,23 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     imgloader.cpp \
     hex2int.cxx \
-    guiloadimage.cpp \
     readimage.cpp \
-    haralick.cpp
+    haralick.cpp \
+    guiresult.cpp \
+    guiimageloader.cpp
 
 HEADERS  += mainwindow.h \
     imgloader.h \
     hex2int.h \
     globalvar.h \
-    guiloadimage.h \
     readimage.h \
-    haralick.h
+    haralick.h \
+    guiresult.h \
+    guiimageloader.h
 
 FORMS    += mainwindow.ui \
-    guiloadimage.ui
+    guiresult.ui \
+    guiimageloader.ui
 
 QMAKE_CXXFLAGS += -fopenmp
 QMAKE_CFLAGS_RELEASE += -fopenmp

@@ -6,33 +6,58 @@ MainWindow::MainWindow(QWidget *parent) :
 ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    openFile = new GUILoadImage;
+    openFile = new GUIImageLoader();
+    results = new GUIResult();
+    createGUI();
 
     ui->extrairPb->setEnabled(false);
+    frameATH->setEnabled(false);
+    frameDMCO->setEnabled(false);
+    frameNT->setEnabled(false);
 
 // MENU BAR
     createActions();
-    createMenus();
+    createMenu();
 // Fim MENU BAR
-// Cria GUI PRINCIPAL
-    createGUI();
-    conexoes(); //Conecta a interface grafica
+
+    createConnections(); //Conecta a interface grafica
 }
 
 MainWindow::~MainWindow()
 {
+    delete framePreview;
+    delete frameATH;
+    delete frameDMCO;
+    delete labelPreview;
+    delete labelATH;
+    delete labelDMCO;
+    delete areaPreview;
+    delete caixaDMCO;
+    delete[] caixasDeSelecao;
+    delete fileMenu;
+    delete ath;
     delete loader;
     delete openAct;
     delete openFile;
     delete ui;
 }
 
-void MainWindow::conexoes()
+/*
+ *
+ *
+ *
+ * METODOS
+ *
+ *
+ *
+ */
+
+void MainWindow::createConnections()
 {
 
-    connect(caixasDeSelecao[0], SIGNAL(clicked()), this, SLOT(slotSel()));
+    connect(caixasDeSelecao[0], SIGNAL(clicked()), this, SLOT(slotSelectAll()));
     for(int i = 1; i < 14; i++)
-        connect(caixasDeSelecao[i], SIGNAL(clicked()), this, SLOT(slotATH()));
+        connect(caixasDeSelecao[i], SIGNAL(clicked()), this, SLOT(slotATHs()));
 
     connect(ui->extrairPb, SIGNAL(released()), this, SLOT(slotExtracao()));
 }
@@ -45,22 +70,10 @@ void MainWindow::createActions()
     connect(openAct, SIGNAL(triggered()), this, SLOT(slotOpen()));
 }
 
-void MainWindow::createMenus()
+void MainWindow::createMenu()
 {
     fileMenu = menuBar()->addMenu(tr("&Arquivo"));
     fileMenu->addAction(openAct);
-}
-
-void MainWindow::createBoxes()
-{
-
-    for(int i = 0, h = 30; i < 14; i++, h += 20)
-    {
-        caixasDeSelecao[i] = new QCheckBox(nomesATH[i], frameATH);
-        caixasDeSelecao[i]->setVisible(true);
-        caixasDeSelecao[i]->setGeometry(10,h,191,25);
-        caixasDeSelecao[i]->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
-    }
 }
 
 void MainWindow::createGUI()
@@ -68,6 +81,7 @@ void MainWindow::createGUI()
     createPreview();
     createATH();
     createDMCO();
+    createNT();
 }
 
 void MainWindow::createPreview()
@@ -116,6 +130,18 @@ void MainWindow::createATH()
     createBoxes();
 }
 
+void MainWindow::createBoxes()
+{
+
+    for(int i = 0, h = 30; i < 14; i++, h += 20)
+    {
+        caixasDeSelecao[i] = new QCheckBox(nomesATH[i], frameATH);
+        caixasDeSelecao[i]->setVisible(true);
+        caixasDeSelecao[i]->setGeometry(10,h,191,25);
+        caixasDeSelecao[i]->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+    }
+}
+
 void MainWindow::createDMCO()
 {
     frameDMCO = new QFrame(this->centralWidget());
@@ -145,26 +171,73 @@ void MainWindow::createDMCO()
     caixaDMCO->setVisible(true);
 }
 
-// SLOTS
+void MainWindow::createNT()
+{
+    frameNT = new QFrame(this->centralWidget());
+    frameNT->setEnabled(true);
+    frameNT->setGeometry(680,141, 241,71);
+    frameNT->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    frameNT->setLineWidth(1);
+    frameNT->setFrameShadow(QFrame::Raised);
+    frameNT->setFrameShape(QFrame::StyledPanel);
+    frameNT->setVisible(true);
+
+    labelNT = new QLabel(frameNT);
+    labelNT->setText("NUMERO DE THREADS");
+    labelNT->setGeometry(50,0,161,16);
+    labelNT->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    labelNT->setVisible(true);
+
+    caixaNT = new QSpinBox(frameNT);
+    caixaNT->setEnabled(true);
+    caixaNT->setGeometry(40,30,160,30);
+    caixaNT->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Fixed);
+    caixaNT->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
+    caixaNT->setKeyboardTracking(true);
+    caixaNT->setMinimum(1);
+    caixaNT->setMaximum(99999);
+    caixaNT->setVisible(true);
+}
+
+/*
+ *
+ *
+ *
+ * SLOTS
+ *
+ *
+ *
+ */
 
 void MainWindow::slotOpen()
 {
-    openFile->show();
+    //openFile->show();
+    openFile->exec();
+//    QEventLoop loop;
+//    connect(this, SIGNAL(destroyed()), &loop, SLOT(quit()));
+//    loop.exec();
     loader = openFile->getLoader();
     areaPreview->setWidget(loader->getImgPreview());
     ui->extrairPb->setEnabled(true);
+    frameATH->setEnabled(true);
+    frameDMCO->setEnabled(true);
+    frameNT->setEnabled(true);
 }
 
 void MainWindow::slotExtracao()
 {
+    for(int i = 1; i < 14; i++)
+    {
+        atributosSelecionados[i-1] = caixasDeSelecao[i]->isChecked();
+    }
+
     if(loader->getStatus())
     {
         int NG = pow(2, openFile->getNc());
         matrizCoN_CPU = new double[NG * NG];
         ath = new Haralick(loader->getMatrizOrig(), openFile->getLargura(), openFile->getAltura(), openFile->getNc());
-        ath->calcularMatrizCoN(matrizCoN_CPU, caixaDMCO->value());
+        ath->calcularMatrizCoN(matrizCoN_CPU, caixaDMCO->value(), caixaNT->value());
         ath->atCpu(matrizCoN_CPU, NG);
-        //results->open();
         if(caixasDeSelecao[1]->isChecked())
         {
             std::cout << "Energia: " << ath->energia() << std::endl;
@@ -172,7 +245,7 @@ void MainWindow::slotExtracao()
     }
 }
 
-void MainWindow::slotSel()
+void MainWindow::slotSelectAll()
 {
     if(caixasDeSelecao[0]->isChecked())
         for(int i = 1; i < 14; i++)
@@ -182,7 +255,7 @@ void MainWindow::slotSel()
             caixasDeSelecao[i]->setChecked(false);
 }
 
-void MainWindow::slotATH()
+void MainWindow::slotATHs()
 {
     if(caixasDeSelecao[0]->isChecked())
         caixasDeSelecao[0]->setChecked(false);

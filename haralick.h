@@ -43,7 +43,7 @@ private:
 
 public:
 
-    void calcularMatrizCoN(double* matrizCoN, int distancia);
+    void calcularMatrizCoN(double* matrizCoN, int distancia, int ntrds);
 
     void atCpu(double *matriz, int tam)
     {

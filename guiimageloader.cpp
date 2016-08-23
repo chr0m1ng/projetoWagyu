@@ -1,27 +1,27 @@
-#include "guiloadimage.h"
-#include "ui_guiloadimage.h"
+#include "guiimageloader.h"
+#include "ui_guiimageloader.h"
 
-GUILoadImage::GUILoadImage(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::GUILoadImage)
+GUIImageLoader::GUIImageLoader(QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::GUIImageLoader)
 {
     ui->setupUi(this);
     loader = new ImgLoader;
     connect(ui->pBOpen, SIGNAL(released()), this, SLOT(slotGetCaminho()));
 }
 
-GUILoadImage::~GUILoadImage()
+GUIImageLoader::~GUIImageLoader()
 {
     delete loader;
     delete ui;
 }
 
-ImgLoader* GUILoadImage::getLoader()
+ImgLoader* GUIImageLoader::getLoader()
 {
     return loader;
 }
 
-void GUILoadImage::slotGetCaminho()
+void GUIImageLoader::slotGetCaminho()
 {
     largura = ui->LarguraSpinBox->value();
     altura = ui->AlturaSpinBox->value();
@@ -44,17 +44,17 @@ void GUILoadImage::slotGetCaminho()
     }
 }
 
-int GUILoadImage::getLargura()
+int GUIImageLoader::getLargura()
 {
     return largura;
 }
 
-int GUILoadImage::getAltura()
+int GUIImageLoader::getAltura()
 {
     return altura;
 }
 
-int GUILoadImage::getNc()
+int GUIImageLoader::getNc()
 {
     return nc;
 }

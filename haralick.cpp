@@ -1,6 +1,11 @@
 #include "haralick.h"
 
-void Haralick::calcularMatrizCoN(double * __restrict__ matrizCoN, int distancia)
+Haralick::~Haralick()
+{
+
+}
+
+void Haralick::calcularMatrizCoN(double * __restrict__ matrizCoN, int distancia, int ntrds)
 {
     int imgLin = this->altura;
     int imgCol = this->largura;
@@ -13,7 +18,7 @@ void Haralick::calcularMatrizCoN(double * __restrict__ matrizCoN, int distancia)
     this->distancia = distancia;
 
     int num_threads = 0;
-    omp_set_num_threads(4);
+    omp_set_num_threads(ntrds);
     #pragma omp parallel
         num_threads = omp_get_num_threads();
     std::cout<< "Threads: "<< num_threads << std::endl;
@@ -70,8 +75,6 @@ void Haralick::calcularMatrizCoN(double * __restrict__ matrizCoN, int distancia)
     #pragma omp parallel for simd
     for(int i = 0; i < TAM_TOTAL; ++i)
         matrizCoN[i] = (1.0 * matrizCoF[i]) / soma;
-
-    std::cout << "tudo bem" << std::endl;
 
     delete [] matrizCoF;
 

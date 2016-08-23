@@ -7,10 +7,12 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QCheckBox>
-#include <QMenu>
 #include <QSpinBox>
+#include <QEventLoop>
+#include <QMenu>
 #include <cmath>
-#include "guiloadimage.h"
+#include "guiimageloader.h"
+#include "guiresult.h"
 #include "imgloader.h"
 #include "haralick.h"
 
@@ -28,35 +30,38 @@ public:
 
 private:
     Ui::MainWindow *ui;
-
+    GUIImageLoader *openFile;
+    GUIResult *results;
+    ImgLoader *loader;
     double * matrizCoN_CPU;
-
-    void conexoes();
-    GUILoadImage *openFile;
-    ImgLoader *loader = NULL;
-    bool atributos[13];
+    bool atributosSelecionados[13];
 
     // GUI
         // MenuBar
         void createActions();
-        void createMenus();
+        void createMenu();
         QMenu *fileMenu;
         QAction *openAct;
         Haralick *ath;
 
         // GuiPrincipal
+        void createConnections();
         void createGUI();
         void createPreview();
         void createATH();
         void createDMCO();
+        void createNT();
         QFrame *framePreview;
         QFrame *frameATH;
         QFrame *frameDMCO;
+        QFrame *frameNT;
         QLabel *labelPreview;
         QLabel *labelATH;
         QLabel *labelDMCO;
+        QLabel *labelNT;
         QScrollArea *areaPreview;
         QSpinBox *caixaDMCO;
+        QSpinBox *caixaNT;
         //CheckBox
         QString nomesATH[14] = {"Selecionar Todos", "Energia",
                                "Contraste", "Correlação",
@@ -73,8 +78,8 @@ private slots:
     void slotExtracao();
 
     //Slots CheckBox
-    void slotSel();
-    void slotATH();
+    void slotSelectAll();
+    void slotATHs();
 
 };
 
