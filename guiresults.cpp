@@ -7,7 +7,6 @@ GUIResults::GUIResults(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setWindowTitle("Resultados");
-    this->setGeometry(0,0,480,370);
 }
 
 GUIResults::~GUIResults()
@@ -29,18 +28,6 @@ void GUIResults::setAtributos(double *&atributosSelecionados, QString *nomesATH)
 
     createFrame();
     createLabels();
-
-    salvar = new QPushButton("Salvar...", this);
-    salvar->setEnabled(true);
-    salvar->setGeometry(360,20,100,50);
-    salvar->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    salvar->setVisible(true);
-
-    fechar = new QPushButton("Fechar", this);
-    fechar->setEnabled(true);
-    fechar->setGeometry(360,90,100,50);
-    fechar->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    fechar->setVisible(true);
 }
 
 void GUIResults::createFrame()
@@ -53,6 +40,20 @@ void GUIResults::createFrame()
     frameATH->setFrameShadow(QFrame::Raised);
     frameATH->setFrameShape(QFrame::StyledPanel);
     frameATH->setVisible(true);
+
+    salvar = new QPushButton("Salvar...", this);
+    salvar->setEnabled(true);
+    salvar->setGeometry(360,20,100,50);
+    salvar->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    salvar->setVisible(true);
+    connect(salvar, SIGNAL(released()), this, SLOT(slotSalvarArquivo()));
+
+    fechar = new QPushButton("Fechar", this);
+    fechar->setEnabled(true);
+    fechar->setGeometry(360,90,100,50);
+    fechar->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    fechar->setVisible(true);
+    connect(fechar, SIGNAL(released()), this, SLOT(close()));
 }
 
 void GUIResults::createLabels()
@@ -63,17 +64,45 @@ void GUIResults::createLabels()
     {
         if(atributosSelecionados[i] != -2)
         {
+            labelsAtributos[i] = new QLabel(nomesATH[i] + " = ", this->frameATH);
+            labelsAtributos[i]->setGeometry(20,h,191,16);
+            labelsAtributos[i]->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+            labelsAtributos[i]->setVisible(true);
+
             lineValue[i] = new QLineEdit(QString::number(atributosSelecionados[i]), this->frameATH);
             lineValue[i]->setGeometry(200,h,100,16);
             lineValue[i]->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
             lineValue[i]->setReadOnly(true);
             lineValue[i]->setVisible(true);
 
-            labelsAtributos[i] = new QLabel(nomesATH[i] + " = ", this->frameATH);
-            labelsAtributos[i]->setGeometry(20,h,191,16);
-            labelsAtributos[i]->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-            labelsAtributos[i]->setVisible(true);
             h += 20;
         }
+    }
+}
+
+void GUIResults::slotSalvarArquivo()
+{
+    caminho = QFileDialog::getSaveFileName(this, "Salvar Arquivo", QDir::currentPath());
+
+    if(!caminho.isEmpty())
+    {
+        caminho.append(".txt");
+        QByteArray ba = caminho.toLatin1();
+        const char *c_str = ba.data();
+
+        FILE *athResults = fopen(c_str, "w");
+        fprintf(athResults, "RESULTADO\n\n");
+        for(int i = 1; i < 14; i++)
+            if(atributosSelecionados[i] != -2)
+            {
+                ba = nomesATH[i].toLatin1();
+                const char *n_str = ba.data();
+
+                ba = QString::number(atributosSelecionados[i]).toLatin1();
+                const char *nm_str = ba.data();
+
+                fprintf(athResults, "%s = %s\n", n_str, nm_str);
+            }
+        fclose(athResults);
     }
 }

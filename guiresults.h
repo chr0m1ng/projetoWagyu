@@ -6,6 +6,8 @@
 #include <QPushButton>
 #include <QFrame>
 #include <QLineEdit>
+#include <QFileDialog>
+#include <QMessageBox>
 
 namespace Ui {
 class GUIResults;
@@ -29,11 +31,15 @@ private:
     QString *nomesATH;
     double *atributosSelecionados;
 
+    QString caminho;
     QPushButton *salvar;
     QPushButton *fechar;
 
     void createLabels();
     void createFrame();
+
+private slots:
+    void slotSalvarArquivo();
 };
 
 #endif // GUIRESULTS_H
