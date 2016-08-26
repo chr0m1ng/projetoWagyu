@@ -4,6 +4,8 @@
 #include <QDialog>
 #include <QLabel>
 #include <QPushButton>
+#include <QFrame>
+#include <QLineEdit>
 
 namespace Ui {
 class GUIResults;
@@ -21,11 +23,17 @@ public:
 private:
     Ui::GUIResults *ui;
 
-    int nAtributos = 0;
-    double *atributosSelecionados;
+    QFrame *frameATH;
     QLabel *labelsAtributos[14];
+    QLineEdit *lineValue[14];
     QString *nomesATH;
+    double *atributosSelecionados;
+
+    QPushButton *salvar;
+    QPushButton *fechar;
+
     void createLabels();
+    void createFrame();
 };
 
 #endif // GUIRESULTS_H
