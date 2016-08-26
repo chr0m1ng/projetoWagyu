@@ -30,8 +30,9 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    GUIImageLoader *openFile;
-    GUIResults *results;
+
+    GUIImageLoader *openFile = NULL;
+    GUIResults *results = NULL;
     ImgLoader *loader;
     double * matrizCoN_CPU;
     double *atributosSelecionados = new double[14];

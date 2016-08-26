@@ -6,8 +6,6 @@ MainWindow::MainWindow(QWidget *parent) :
 ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    openFile = new GUIImageLoader();
-    results = new GUIResults();
     createGUI();
 
     ui->extrairPb->setEnabled(false);
@@ -219,6 +217,9 @@ void MainWindow::createNT()
 
 void MainWindow::slotOpen()
 {
+    if(openFile == NULL)
+        openFile = new GUIImageLoader();
+
     openFile->exec();
     loader = openFile->getLoader();
     areaPreview->setWidget(loader->getImgPreview());
@@ -256,6 +257,9 @@ void MainWindow::slotExtracao()
             std::cout << nomesATH[i].toStdString() + " " << atributosSelecionados[i] << std::endl;
         }
     }
+    if(results == NULL)
+        results = new GUIResults();
+
     results->setAtributos(atributosSelecionados, nomesATH);
     resultAct->setEnabled(true);
 }

@@ -17,6 +17,8 @@ GUIResults::~GUIResults()
     delete[] lineValue;
     delete[] labelsAtributos;
     delete nomesATH;
+    delete salvar;
+    delete fechar;
     delete ui;
 }
 
