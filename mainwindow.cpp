@@ -178,7 +178,7 @@ void MainWindow::createDMCO()
     caixaDMCO->setEnabled(true);
     caixaDMCO->setGeometry(40,30,160,30);
     caixaDMCO->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Fixed);
-    caixaDMCO->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
+    //caixaDMCO->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
     caixaDMCO->setKeyboardTracking(true);
     caixaDMCO->setMinimum(1);
     caixaDMCO->setMaximum(99999);
@@ -206,10 +206,11 @@ void MainWindow::createNT()
     caixaNT->setEnabled(true);
     caixaNT->setGeometry(40,30,160,30);
     caixaNT->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Fixed);
-    caixaNT->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
+    //caixaNT->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
     caixaNT->setKeyboardTracking(true);
     caixaNT->setMinimum(1);
     caixaNT->setMaximum(99999);
+    caixaNT->setValue(4);
     caixaNT->setVisible(true);
 }
 
@@ -235,6 +236,9 @@ void MainWindow::slotOpen()
     frameATH->setEnabled(true);
     frameDMCO->setEnabled(true);
     frameNT->setEnabled(true);
+    isNovaImg = true;
+    for(int i = 1; i < 14; i++)
+        atributosSelecionados[i] = -2;
 }
 
 void MainWindow::slotResult()
@@ -249,29 +253,32 @@ void MainWindow::slotMatriz()
 
 void MainWindow::slotExtracao()
 {
+    if(results == NULL)
+        results = new GUIResults();
+    results->limpaGUI();
+
     for(int i = 1; i < 14; i++)
     {
-        if(caixasDeSelecao[i]->isChecked())
+        if(caixasDeSelecao[i]->isChecked() && atributosSelecionados[i] == -2)
             atributosSelecionados[i] = i;
-        else
+        if(!caixasDeSelecao[i]->isChecked() && atributosSelecionados[i] != -2)
             atributosSelecionados[i] = -2;
     }
 
     if(loader->getStatus())
     {
-        int NG = pow(2, openFile->getNc());
-        matrizCoN_CPU = new double[NG * NG];
-        ath = new Haralick(loader->getMatrizOrig(), openFile->getLargura(), openFile->getAltura(), openFile->getNc(), caixaNT->value());
-        ath->calcularMatrizCoN(matrizCoN_CPU, caixaDMCO->value());
-        ath->atCpu(matrizCoN_CPU, NG);
-        ath->calcATH(atributosSelecionados);
-        for(int i = 1; i < 14; i++)
+        if(isNovaImg)
         {
-            std::cout << nomesATH[i].toStdString() + " " << atributosSelecionados[i] << std::endl;
+            int NG = pow(2, openFile->getNc());
+            matrizCoN_CPU = new double[NG * NG];
+            ath = new Haralick(loader->getMatrizOrig(), openFile->getLargura(), openFile->getAltura(), NG, caixaNT->value());
+            ath->calcularMatrizCoN(matrizCoN_CPU, caixaDMCO->value());
+            ath->atCpu(matrizCoN_CPU, NG);
+
+            isNovaImg = false;
         }
+        ath->calcATH(atributosSelecionados);
     }
-    if(results == NULL)
-        results = new GUIResults();
 
     results->setAtributos(atributosSelecionados, nomesATH);
     resultAct->setEnabled(true);

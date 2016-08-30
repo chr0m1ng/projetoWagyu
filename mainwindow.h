@@ -39,6 +39,8 @@ private:
     double * matrizCoN_CPU;
     double *atributosSelecionados = new double[14];
 
+    bool isNovaImg = false;
+
     // GUI
         // MenuBar
         void createActions();
