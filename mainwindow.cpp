@@ -37,6 +37,8 @@ MainWindow::~MainWindow()
     delete loader;
     delete openAct;
     delete openFile;
+    delete resultAct;
+    delete matrizAct;
     delete [] boxCheckeds;
     delete ui;
 }
@@ -72,6 +74,11 @@ void MainWindow::createActions()
     resultAct->setStatusTip(tr("Exibir resultados dos ATH calculados"));
     resultAct->setEnabled(false);
     connect(resultAct, SIGNAL(triggered()), this, SLOT(slotResult()));
+
+    matrizAct = new QAction(tr("&Matriz"), this);
+    matrizAct->setStatusTip(tr("Exibe as Matrizes de Co-ocorência"));
+    matrizAct->setEnabled(false);
+    connect(matrizAct, SIGNAL(triggered()), this, SLOT(slotMatriz()));
 }
 
 void MainWindow::createMenu()
@@ -81,6 +88,7 @@ void MainWindow::createMenu()
 
     resultsMenu = menuBar()->addMenu(tr("&Resultados"));
     resultsMenu->addAction(resultAct);
+    resultsMenu->addAction(matrizAct);
 }
 
 void MainWindow::createGUI()
@@ -246,6 +254,12 @@ void MainWindow::slotResult()
     results->exec();
 }
 
+void MainWindow::slotMatriz()
+{
+    matriz = new GUIMatrizCoo();
+    matriz->exec();
+}
+
 void MainWindow::slotExtracao()
 {
     if(results == NULL)
@@ -272,6 +286,8 @@ void MainWindow::slotExtracao()
 
     results->setAtributos(atributosSelecionados, nomesATH, boxCheckeds);
     resultAct->setEnabled(true);
+    matrizAct->setEnabled(true);
+
 }
 
 void MainWindow::slotSelectAll()
