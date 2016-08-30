@@ -23,7 +23,7 @@ void GUIMatrizCoo::createButtons()
     int left = 0, top = 0;
     for(int i = 0; i < 9; i++)
     {
-        caminho = QDir::currentPath() + "/Extras/Matriz_0" + QString::number(i+1) + ".png";
+        caminho = QDir::currentPath() + "/../projetoWagyu/Extras/Matriz_0" + QString::number(i+1) + ".png";
         QPixmap img(caminho);
         QIcon icon(img);
         btMatriz[i] = new QPushButton(this);
