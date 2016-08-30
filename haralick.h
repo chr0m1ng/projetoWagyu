@@ -12,12 +12,12 @@
 class Haralick
 {
 public:
-    Haralick(unsigned short * matrizImg, int altura, int largura, int nc, int ntrds)
+    Haralick(unsigned short * matrizImg, int largura, int altura, int nc, int ntrds)
     {
         this->matrizImg = matrizImg;
         this->altura = altura;
         this->largura = largura;
-        this->Ng = nc;
+        this->Ng = (int) pow(2, nc);
         this->ntrds = ntrds;
     }
     ~Haralick();

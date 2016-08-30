@@ -31,21 +31,6 @@ void GUIResults::setAtributos(double *&atributosSelecionados, QString *nomesATH,
     createLabels();
 }
 
-
-void GUIResults::limpaGUI()
-{
-    for(int i = 1; i < 14; i++)
-    {
-        if(labelsAtributos[i] != NULL)
-        {
-            delete labelsAtributos[i];
-            delete lineValue[i];
-            labelsAtributos[i] = NULL;
-            lineValue[i] = NULL;
-        }
-    }
-}
-
 void GUIResults::createFrame()
 {
     frameATH = new QFrame(this);
@@ -122,4 +107,3 @@ void GUIResults::slotSalvarArquivo()
         fclose(athResults);
     }
 }
-

@@ -13,6 +13,8 @@ ui(new Ui::MainWindow)
     frameDMCO->setEnabled(false);
     frameNT->setEnabled(false);
 
+    matriz = new GUIMatrizCoo();
+
 // MENU BAR
     createActions();
     createMenu();
@@ -72,6 +74,11 @@ void MainWindow::createActions()
     resultAct->setStatusTip(tr("Exibir resultados dos ATH calculados"));
     resultAct->setEnabled(false);
     connect(resultAct, SIGNAL(triggered()), this, SLOT(slotResult()));
+
+    matrizAct = new QAction(tr("&Matriz"), this);
+    matrizAct->setStatusTip(tr("Exibe as Matrizes de Co-ocorência"));
+    matrizAct->setEnabled(true);
+    connect(matrizAct, SIGNAL(triggered()), this, SLOT(slotMatriz()));
 }
 
 void MainWindow::createMenu()
@@ -81,6 +88,7 @@ void MainWindow::createMenu()
 
     resultsMenu = menuBar()->addMenu(tr("&Resultados"));
     resultsMenu->addAction(resultAct);
+    resultsMenu->addAction(matrizAct);
 }
 
 void MainWindow::createGUI()
@@ -171,7 +179,7 @@ void MainWindow::createDMCO()
     caixaDMCO->setEnabled(true);
     caixaDMCO->setGeometry(40,30,160,30);
     caixaDMCO->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Fixed);
-    //caixaDMCO->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
+    caixaDMCO->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
     caixaDMCO->setKeyboardTracking(true);
     caixaDMCO->setMinimum(1);
     caixaDMCO->setMaximum(99999);
@@ -199,11 +207,10 @@ void MainWindow::createNT()
     caixaNT->setEnabled(true);
     caixaNT->setGeometry(40,30,160,30);
     caixaNT->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Fixed);
-    //caixaNT->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
+    caixaNT->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
     caixaNT->setKeyboardTracking(true);
     caixaNT->setMinimum(1);
     caixaNT->setMaximum(99999);
-    caixaNT->setValue(4);
     caixaNT->setVisible(true);
 }
 
@@ -242,23 +249,19 @@ void MainWindow::slotResult()
     results->exec();
 }
 
+void MainWindow::slotMatriz()
+{
+    matriz->exec();
+}
+
 void MainWindow::slotExtracao()
 {
-    if(results == NULL)
-        results = new GUIResults();
-    results->limpaGUI();
-
     for(int i = 1; i < 14; i++)
     {
-        if(caixasDeSelecao[i]->isChecked() && atributosSelecionados[i] == -2)
-            boxCheckeds[i] = true;
-
-        else if((caixasDeSelecao[i]->isChecked() && atributosSelecionados[i] != -2) || !caixasDeSelecao[i]->isChecked())
-            boxCheckeds[i] = false;
-    }
-
-    if(loader->getStatus())
-    {
+        if(caixasDeSelecao[i]->isChecked())
+            atributosSelecionados[i] = i;
+        else
+            atributosSelecionados[i] = -2;
         if(isNovaImg)
         {
             int NG = pow(2, openFile->getNc());
@@ -279,7 +282,10 @@ void MainWindow::slotExtracao()
             isNovaImg = false;
         }
         ath->calcATH(atributosSelecionados, boxCheckeds);
+
     }
+    if(results == NULL)
+        results = new GUIResults();
 
     results->setAtributos(atributosSelecionados, nomesATH, boxCheckeds);
     resultAct->setEnabled(true);

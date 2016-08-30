@@ -43,14 +43,13 @@ void Haralick::calcularMatrizCoN(double * __restrict__ matrizCoN, int distancia)
                 mc135_  (mIMG, i, j, mc[tid]);
             }
         }
-
     }
 
-    #pragma omp parallel for
-    for (int i = 0; i < N; ++i)
-        for (int j = 0; j < N; ++j)
-            for(int k = 1; k < num_threads; k++)
-                mc[0][i*N + j] += mc[k][i*N + j];
+   #pragma omp parallel for
+   for (int i = 0; i < N; ++i)
+       for (int j = 0; j < N; ++j)
+           for(int k = 1; k < num_threads; k++)
+               mc[0][i*N + j] += mc[k][i*N + j];
 
    //Transposta
     #pragma omp parallel for
@@ -78,6 +77,8 @@ void Haralick::calcularMatrizCoN(double * __restrict__ matrizCoN, int distancia)
         matrizCoN[i] = (1.0 * matrizCoF[i]) / soma;
 
     delete [] matrizCoF;
+
+
 }
 
 double Haralick::mediaH(const double * __restrict__ p, int tam)
