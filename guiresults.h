@@ -22,14 +22,12 @@ public:
     ~GUIResults();
     void setAtributos(double *&atributosSelecionados, QString*nomesATH);
 
-    void limpaGUI();
-
 private:
     Ui::GUIResults *ui;
 
     QFrame *frameATH;
-    QLabel *labelsAtributos[14] = {NULL};
-    QLineEdit *lineValue[14] = {NULL};
+    QLabel *labelsAtributos[14];
+    QLineEdit *lineValue[14];
     QString *nomesATH;
     double *atributosSelecionados;
 
