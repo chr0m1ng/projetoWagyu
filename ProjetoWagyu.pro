@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     readimage.cpp \
     haralick.cpp \
     guiimageloader.cpp \
-    guiresults.cpp
+    guiresults.cpp \
+    guimatrizcoo.cpp
 
 HEADERS  += mainwindow.h \
     imgloader.h \
@@ -28,11 +29,13 @@ HEADERS  += mainwindow.h \
     readimage.h \
     haralick.h \
     guiimageloader.h \
-    guiresults.h
+    guiresults.h \
+    guimatrizcoo.h
 
 FORMS    += mainwindow.ui \
     guiimageloader.ui \
-    guiresults.ui
+    guiresults.ui \
+    guimatrizcoo.ui
 
 QMAKE_CXXFLAGS += -fopenmp
 QMAKE_CFLAGS_RELEASE += -fopenmp
