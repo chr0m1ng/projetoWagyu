@@ -13,6 +13,7 @@
 #include <cmath>
 #include "guiimageloader.h"
 #include "guiresults.h"
+#include "guimatrizcoo.h"
 #include "imgloader.h"
 #include "haralick.h"
 
@@ -33,6 +34,7 @@ private:
 
     GUIImageLoader *openFile = NULL;
     GUIResults *results = NULL;
+    GUIMatrizCoo *matriz = NULL;
     ImgLoader *loader;
     double * matrizCoN_CPU;
     double *atributosSelecionados = new double[14];
@@ -45,6 +47,7 @@ private:
         QMenu *resultsMenu;
         QAction *openAct;
         QAction *resultAct;
+        QAction *matrizAct;
         Haralick *ath;
 
         // GuiPrincipal
@@ -79,6 +82,7 @@ private:
 private slots:
     void slotOpen();
     void slotResult();
+    void slotMatriz();
     void slotExtracao();
 
     //Slots CheckBox
