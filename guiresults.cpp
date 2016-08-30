@@ -42,6 +42,7 @@ void GUIResults::limpaGUI()
             delete lineValue[i];
             labelsAtributos[i] = NULL;
             lineValue[i] = NULL;
+            boxCheckeds[i] = false;
         }
     }
 }

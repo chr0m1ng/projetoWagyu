@@ -230,10 +230,14 @@ void MainWindow::slotOpen()
     frameDMCO->setEnabled(true);
     frameNT->setEnabled(true);
     isNovaImg = true;
+
     for(int i = 1; i < 14; i++)
     {
         atributosSelecionados[i] = -2;
         boxCheckeds[i] = false;
+        caixasDeSelecao[i]->setChecked(false);
+        caixaDMCO->setValue(1);
+        caixaNT->setValue(4);
     }
 }
 
@@ -249,13 +253,7 @@ void MainWindow::slotExtracao()
     results->limpaGUI();
 
     for(int i = 1; i < 14; i++)
-    {
-        if(caixasDeSelecao[i]->isChecked() && atributosSelecionados[i] == -2)
-            boxCheckeds[i] = true;
-
-        else if((caixasDeSelecao[i]->isChecked() && atributosSelecionados[i] != -2) || !caixasDeSelecao[i]->isChecked())
-            boxCheckeds[i] = false;
-    }
+        boxCheckeds[i] = caixasDeSelecao[i]->isChecked();
 
     if(loader->getStatus())
     {
@@ -266,15 +264,6 @@ void MainWindow::slotExtracao()
             ath = new Haralick(loader->getMatrizOrig(), openFile->getLargura(), openFile->getAltura(), NG, caixaNT->value());
             ath->calcularMatrizCoN(matrizCoN_CPU, caixaDMCO->value());
             ath->atCpu(matrizCoN_CPU, NG);
-
-            for(int i = 1; i < 14; i++)
-            {
-                atributosSelecionados[i] = -2;
-                boxCheckeds[i] = false;
-                caixasDeSelecao[i]->setChecked(false);
-                caixaDMCO->setValue(1);
-                caixaNT->setValue(4);
-            }
 
             isNovaImg = false;
         }
