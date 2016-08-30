@@ -20,7 +20,7 @@ class GUIResults : public QDialog
 public:
     explicit GUIResults(QWidget *parent = 0);
     ~GUIResults();
-    void setAtributos(double *&atributosSelecionados, QString*nomesATH);
+    void setAtributos(double *&atributosSelecionados, QString*nomesATH, bool * boxCheckeds);
 
     void limpaGUI();
 
@@ -32,6 +32,7 @@ private:
     QLineEdit *lineValue[14] = {NULL};
     QString *nomesATH;
     double *atributosSelecionados;
+    bool *boxCheckeds;
 
     QString caminho;
     QPushButton *salvar;

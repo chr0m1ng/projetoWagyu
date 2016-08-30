@@ -53,7 +53,9 @@ public:
             this->Ng = tam;
     }
 
-    void calcATH(double *&);
+    void calcATH(double *&, bool *);
+
+    int cont = 0;
 
     double energia(); // f1
     double contraste(); // f2

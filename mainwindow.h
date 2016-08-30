@@ -35,8 +35,9 @@ private:
     GUIResults *results = NULL;
     ImgLoader *loader;
     double * matrizCoN_CPU;
-    double *atributosSelecionados = new double[14];
+    double * atributosSelecionados = new double[14];
 
+    bool * boxCheckeds = new bool[14];
     bool isNovaImg = false;
 
     // GUI
@@ -75,7 +76,7 @@ private:
                                "Entropia Soma", "Entropia",
                                "Variancia Diferença", "Entropia Diferença",
                                "Medidas Correlação 1", "Medidas Correlação 2"};
-        QCheckBox *caixasDeSelecao[14];
+        QCheckBox **caixasDeSelecao = new QCheckBox*[14];
         void createBoxes();
 
 private slots:

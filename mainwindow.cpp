@@ -31,12 +31,13 @@ MainWindow::~MainWindow()
     delete labelDMCO;
     delete areaPreview;
     delete caixaDMCO;
-    delete[] caixasDeSelecao;
+    delete caixasDeSelecao;
     delete fileMenu;
     delete ath;
     delete loader;
     delete openAct;
     delete openFile;
+    delete [] boxCheckeds;
     delete ui;
 }
 
@@ -230,7 +231,10 @@ void MainWindow::slotOpen()
     frameNT->setEnabled(true);
     isNovaImg = true;
     for(int i = 1; i < 14; i++)
+    {
         atributosSelecionados[i] = -2;
+        boxCheckeds[i] = false;
+    }
 }
 
 void MainWindow::slotResult()
@@ -247,9 +251,10 @@ void MainWindow::slotExtracao()
     for(int i = 1; i < 14; i++)
     {
         if(caixasDeSelecao[i]->isChecked() && atributosSelecionados[i] == -2)
-            atributosSelecionados[i] = i;
-        if(!caixasDeSelecao[i]->isChecked() && atributosSelecionados[i] != -2)
-            atributosSelecionados[i] = -2;
+            boxCheckeds[i] = true;
+
+        else if((caixasDeSelecao[i]->isChecked() && atributosSelecionados[i] != -2) || !caixasDeSelecao[i]->isChecked())
+            boxCheckeds[i] = false;
     }
 
     if(loader->getStatus())
@@ -262,12 +267,21 @@ void MainWindow::slotExtracao()
             ath->calcularMatrizCoN(matrizCoN_CPU, caixaDMCO->value());
             ath->atCpu(matrizCoN_CPU, NG);
 
+            for(int i = 1; i < 14; i++)
+            {
+                atributosSelecionados[i] = -2;
+                boxCheckeds[i] = false;
+                caixasDeSelecao[i]->setChecked(false);
+                caixaDMCO->setValue(1);
+                caixaNT->setValue(4);
+            }
+
             isNovaImg = false;
         }
-        ath->calcATH(atributosSelecionados);
+        ath->calcATH(atributosSelecionados, boxCheckeds);
     }
 
-    results->setAtributos(atributosSelecionados, nomesATH);
+    results->setAtributos(atributosSelecionados, nomesATH, boxCheckeds);
     resultAct->setEnabled(true);
 }
 

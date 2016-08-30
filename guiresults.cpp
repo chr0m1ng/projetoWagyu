@@ -21,10 +21,11 @@ GUIResults::~GUIResults()
     delete ui;
 }
 
-void GUIResults::setAtributos(double *&atributosSelecionados, QString *nomesATH)
+void GUIResults::setAtributos(double *&atributosSelecionados, QString *nomesATH, bool *boxCheckeds)
 {
     this->atributosSelecionados = atributosSelecionados;
     this->nomesATH = nomesATH;
+    this->boxCheckeds = boxCheckeds;
 
     createFrame();
     createLabels();
@@ -77,7 +78,7 @@ void GUIResults::createLabels()
 
     for(int i = 1; i < 14; i++)
     {
-        if(atributosSelecionados[i] != -2)
+        if(boxCheckeds[i])
         {
             labelsAtributos[i] = new QLabel(nomesATH[i] + " = ", this->frameATH);
             labelsAtributos[i]->setGeometry(20,h,191,16);
