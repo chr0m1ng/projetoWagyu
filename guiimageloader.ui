@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>GUIImageLoader</class>
+ <widget class="QDialog" name="GUIImageLoader">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>498</width>
+    <height>218</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Abrir Imagem</string>
+  </property>
+  <widget class="QFrame" name="FrameDdI">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>241</width>
+     <height>131</height>
+    </rect>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QLabel" name="DdILabel">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>0</y>
+      <width>161</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>DIMENSÕES DA IMAGEM</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="LarguraLb">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>29</y>
+      <width>66</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Largura</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="AlturaLb">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>80</y>
+      <width>66</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Altura</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="LarguraSpinBox">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>30</y>
+      <width>130</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>0</number>
+    </property>
+    <property name="maximum">
+     <number>999999</number>
+    </property>
+    <property name="value">
+     <number>4201</number>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="AlturaSpinBox">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>80</y>
+      <width>130</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>0</number>
+    </property>
+    <property name="maximum">
+     <number>999999</number>
+    </property>
+    <property name="value">
+     <number>1831</number>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QFrame" name="FrameNC">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>10</y>
+     <width>231</width>
+     <height>131</height>
+    </rect>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QLabel" name="NCLabel">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>0</y>
+      <width>121</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>NIVEIS DE CINZA</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="NCspinBox">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>50</y>
+      <width>171</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>0</number>
+    </property>
+    <property name="maximum">
+     <number>64</number>
+    </property>
+    <property name="value">
+     <number>12</number>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QLineEdit" name="lineCaminho">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>150</y>
+     <width>341</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="readOnly">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pBOpen">
+   <property name="geometry">
+    <rect>
+     <x>360</x>
+     <y>150</y>
+     <width>131</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Abrir</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
