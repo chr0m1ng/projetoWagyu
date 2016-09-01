@@ -37,10 +37,10 @@ private:
     GUIMatrizCoo *matriz = NULL;
     ImgLoader *loader;
     double * matrizCoN_CPU;
-    double * atributosSelecionados = new double[14];
+    double * atributosSelecionados;
 
-    bool * boxCheckeds = new bool[14];
-    bool isNovaImg = false;
+    bool * boxCheckeds;
+    bool isNovaImg;
 
     // GUI
         // MenuBar
@@ -72,14 +72,8 @@ private:
         QSpinBox *caixaDMCO;
         QSpinBox *caixaNT;
         //CheckBox
-        QString nomesATH[14] = {"Selecionar Todos", "Energia",
-                               "Contraste", "Correlação",
-                               "Variancia", "MDI",
-                               "Media Soma", "Variancia Soma",
-                               "Entropia Soma", "Entropia",
-                               "Variancia Diferença", "Entropia Diferença",
-                               "Medidas Correlação 1", "Medidas Correlação 2"};
-        QCheckBox **caixasDeSelecao = new QCheckBox*[14];
+        QString nomesATH[14];
+        QCheckBox **caixasDeSelecao;
         void createBoxes();
 
 private slots:
@@ -87,6 +81,7 @@ private slots:
     void slotResult();
     void slotMatriz();
     void slotExtracao();
+    void slotMatrizesCoOc(int i);
 
     //Slots CheckBox
     void slotSelectAll();

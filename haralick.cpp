@@ -14,6 +14,11 @@ void Haralick::calcularMatrizCoN(double * __restrict__ matrizCoN, int distancia)
     const int N = this->Ng;
 
     int * __restrict__ matrizCoF = new int[N*N];
+    matrizCo0 = new unsigned short[N * N];
+    matrizCo45 = new unsigned short[N * N];
+    matrizCo90 = new unsigned short[N * N];
+    matrizCo135 = new unsigned short[N * N];
+
 
     this->distancia = distancia;
 
@@ -109,6 +114,7 @@ inline void Haralick::mc0_(unsigned short * __restrict__ mIMG, int i, int j, int
         int pos = z1*Ng + z2;
 
         matrizCoTmp[pos] += 1;
+        matrizCo0[pos] += 1;
     }
 }
 
@@ -125,6 +131,7 @@ inline void Haralick::mc45_(unsigned short * __restrict__ mIMG, int i, int j, in
         int pos = z1*Ng + z2;
 
         matrizCoTmp[pos] += 1;
+        matrizCo45[pos] += 1;
     }
 
 }
@@ -141,6 +148,7 @@ inline void Haralick::mc90_(unsigned short * __restrict__ mIMG, int i, int j, in
         int pos = z1*Ng + z2;
 
         matrizCoTmp[pos] += 1;
+        matrizCo90[pos] += 1;
     }
 }
 
@@ -157,8 +165,30 @@ inline void Haralick::mc135_(unsigned short * __restrict__ mIMG, int i, int j, i
         int pos = z1*Ng + z2;
 
         matrizCoTmp[pos] += 1;
+        matrizCo135[pos] += 1;
     }
 }
+
+unsigned short * Haralick::getMc0()
+{
+    return matrizCo0;
+}
+
+unsigned short * Haralick::getMc45()
+{
+    return matrizCo45;
+}
+
+unsigned short * Haralick::getMc90()
+{
+    return matrizCo90;
+}
+
+unsigned short * Haralick::getMc135()
+{
+    return matrizCo135;
+}
+
 
 double Haralick::P_x_mais_y(const double * __restrict__ p, const int k, int tam)
 {
@@ -201,10 +231,7 @@ void Haralick::calcATH(double *&atributosSelecionados, bool * boxCheckeds)
         switch (i) {
         case 1:
             if(boxCheckeds[i] && (atributosSelecionados[i] == -2))
-            {
                 atributosSelecionados[i] = (double)energia();
-                std::cout << "Energia: " << ++cont << std::endl;
-            }
             break;
         case 2:
             if(boxCheckeds[i] && (atributosSelecionados[i] == -2))

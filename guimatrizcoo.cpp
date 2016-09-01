@@ -9,6 +9,7 @@ GUIMatrizCoo::GUIMatrizCoo(QWidget *parent) :
     this->setFixedHeight(113*3);
     this->setFixedWidth(113*3);
     this->setWindowTitle("Matriz de Co-Ocorrência");
+    btMatriz = new QPushButton*[9];
     createButtons();
 }
 
@@ -39,4 +40,15 @@ void GUIMatrizCoo::createButtons()
         else
             left += 113;
     }
+}
+
+QPushButton * GUIMatrizCoo::getBt(int i)
+{
+    return btMatriz[i];
+}
+
+void GUIMatrizCoo::exibeResults(unsigned short *matrizCoOc, int N)
+{
+    this->matrizCoOc = matrizCoOc;
+    this->N = N;
 }

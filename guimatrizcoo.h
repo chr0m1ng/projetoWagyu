@@ -19,11 +19,15 @@ class GUIMatrizCoo : public QDialog
 public:
     explicit GUIMatrizCoo(QWidget *parent = 0);
     ~GUIMatrizCoo();
+    QPushButton * getBt(int i);
+    void exibeResults(unsigned short *matrizCoOc, int N);
 
 private:
     Ui::GUIMatrizCoo *ui;
-    QPushButton **btMatriz = new QPushButton*[9];
+    QPushButton **btMatriz;
     void createButtons();
+    unsigned short *matrizCoOc;
+    int N;
 };
 
 #endif // GUIMATRIZCOO_H

@@ -29,7 +29,7 @@ private:
 
 // Variaveis
     QLabel *imgPreview = NULL;
-    bool status = false;
+    bool status;
     QString caminho;
     QImage imgOrig;
     tImage st_image;

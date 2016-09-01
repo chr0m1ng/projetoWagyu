@@ -28,8 +28,8 @@ private:
     Ui::GUIResults *ui;
 
     QFrame *frameATH;
-    QLabel *labelsAtributos[14] = {NULL};
-    QLineEdit *lineValue[14] = {NULL};
+    QLabel **labelsAtributos;
+    QLineEdit **lineValue;
     QString *nomesATH;
     double *atributosSelecionados;
     bool *boxCheckeds;

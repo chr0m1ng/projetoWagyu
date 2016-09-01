@@ -5,6 +5,27 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
 ui(new Ui::MainWindow)
 {
+    caixasDeSelecao = new QCheckBox*[14];
+    isNovaImg = false;
+    boxCheckeds = new bool[14];
+    atributosSelecionados = new double[14];
+
+    nomesATH[0] = "Selecionar Todos";
+    nomesATH[1] = "Energia";
+    nomesATH[2] = "Contraste";
+    nomesATH[3] = "Correlação";
+    nomesATH[4] = "Variancia";
+    nomesATH[5] = "MDI";
+    nomesATH[6] = "Media Soma";
+    nomesATH[7] = "Variancia Soma";
+    nomesATH[8] = "Entropia Soma";
+    nomesATH[9] = "Entropia";
+    nomesATH[10] = "Variancia Diferença";
+    nomesATH[11] = "Entropia Diferença";
+    nomesATH[12] = "Medidas Correlação 1";
+    nomesATH[13] = "Medidas Correlação 2";
+
+
     ui->setupUi(this);
     createGUI();
 
@@ -12,6 +33,9 @@ ui(new Ui::MainWindow)
     frameATH->setEnabled(false);
     frameDMCO->setEnabled(false);
     frameNT->setEnabled(false);
+
+
+
 
 // MENU BAR
     createActions();
@@ -55,12 +79,15 @@ MainWindow::~MainWindow()
 
 void MainWindow::createConnections()
 {
-
     connect(caixasDeSelecao[0], SIGNAL(clicked()), this, SLOT(slotSelectAll()));
     for(int i = 1; i < 14; i++)
         connect(caixasDeSelecao[i], SIGNAL(clicked()), this, SLOT(slotATHs()));
 
     connect(ui->extrairPb, SIGNAL(released()), this, SLOT(slotExtracao()));
+
+    matriz = new GUIMatrizCoo();
+    connect(matriz->getBt(0), SIGNAL(released()), this, SLOT(slotResult()));
+
 }
 
 void MainWindow::createActions()
@@ -78,7 +105,7 @@ void MainWindow::createActions()
     matrizAct = new QAction(tr("&Matriz"), this);
     matrizAct->setStatusTip(tr("Exibe as Matrizes de Co-ocorência"));
     matrizAct->setEnabled(false);
-    connect(matrizAct, SIGNAL(triggered()), this, SLOT(slotMatriz()));
+    connect(matrizAct, SIGNAL(triggered()), this, SLOT(slotMatriz()));    
 }
 
 void MainWindow::createMenu()
@@ -225,6 +252,19 @@ void MainWindow::createNT()
  *
  */
 
+void MainWindow::slotMatrizesCoOc(int i)
+{
+    switch (i)
+    {
+        case 1:
+
+
+            break;
+        default:
+            break;
+    }
+}
+
 void MainWindow::slotOpen()
 {
     if(openFile == NULL)
@@ -256,7 +296,6 @@ void MainWindow::slotResult()
 
 void MainWindow::slotMatriz()
 {
-    matriz = new GUIMatrizCoo();
     matriz->exec();
 }
 

@@ -5,16 +5,24 @@ GUIResults::GUIResults(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::GUIResults)
 {
+    labelsAtributos = new QLabel*[14];
+    lineValue = new QLineEdit*[14];
+    for(int i = 0; i < 13; i++)
+    {
+        lineValue[i] = NULL;
+        labelsAtributos[i] = NULL;
+    }
     ui->setupUi(this);
     this->setWindowTitle("Resultados");
+
 }
 
 GUIResults::~GUIResults()
 {
     delete frameATH;
     delete atributosSelecionados;
-    delete[] lineValue;
-    delete[] labelsAtributos;
+    delete lineValue;
+    delete labelsAtributos;
     delete nomesATH;
     delete salvar;
     delete fechar;

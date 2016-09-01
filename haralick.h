@@ -22,12 +22,22 @@ public:
     }
     ~Haralick();
 
+    unsigned short * getMc0();
+    unsigned short * getMc45();
+    unsigned short * getMc90();
+    unsigned short * getMc135();
+
+
 private:
     int Ng;
     int altura, largura;
     int distancia;
     int ntrds;
     unsigned short * matrizImg;
+    unsigned short * matrizCo0;
+    unsigned short * matrizCo45;
+    unsigned short * matrizCo90;
+    unsigned short * matrizCo135;
 
     double mediaH(const double * __restrict__ p, int tam);
 
@@ -54,8 +64,6 @@ public:
     }
 
     void calcATH(double *&, bool *);
-
-    int cont = 0;
 
     double energia(); // f1
     double contraste(); // f2
