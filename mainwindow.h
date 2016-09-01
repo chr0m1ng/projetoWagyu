@@ -81,7 +81,10 @@ private slots:
     void slotResult();
     void slotMatriz();
     void slotExtracao();
-    void slotMatrizesCoOc(int i);
+    void slotMatrizesCoOc0();
+    void slotMatrizesCoOc45();
+    void slotMatrizesCoOc90();
+    void slotMatrizesCoOc135();
 
     //Slots CheckBox
     void slotSelectAll();

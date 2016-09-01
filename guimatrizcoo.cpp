@@ -15,6 +15,7 @@ GUIMatrizCoo::GUIMatrizCoo(QWidget *parent) :
 
 GUIMatrizCoo::~GUIMatrizCoo()
 {
+    delete txtMat;
     delete ui;
 }
 
@@ -47,8 +48,66 @@ QPushButton * GUIMatrizCoo::getBt(int i)
     return btMatriz[i];
 }
 
-void GUIMatrizCoo::exibeResults(unsigned short *matrizCoOc, int N)
+void GUIMatrizCoo::exibeResults(unsigned short *matrizCoOc, int N, QString mat)
 {
+    this->hide();
     this->matrizCoOc = matrizCoOc;
     this->N = N;
+    this->mat = mat;
+
+    QDesktopWidget t;
+    QRect screenSize = t.availableGeometry(t.primaryScreen());
+    QWidget* wgMat = new QWidget;
+    txtMat = new QPlainTextEdit(wgMat);
+
+    wgMat->resize(screenSize.width(), screenSize.height());
+    txtMat->resize(screenSize.width(), screenSize.height() - 100);
+    txtMat->setReadOnly(true);
+    wgMat->setWindowTitle(mat);
+    QPushButton* btSalvar = new QPushButton("Salvar", wgMat);
+    QPushButton* btFechar = new QPushButton("Fechar", wgMat);
+    btFechar->setGeometry(screenSize.width() - 150, screenSize.height() - 95, 100, 40);
+    btSalvar->setGeometry(screenSize.width() - 280, screenSize.height() - 95, 100, 40);
+
+
+    for(int i = 0; i < N; i++)
+    {
+        for(int j = 0; j < N; j++)
+        {
+            QString tmp = QString::number(matrizCoOc[i]) + " ";
+            txtMat->insertPlainText(tmp);
+
+        }
+        txtMat->appendPlainText("");
+    }
+
+    connect(btSalvar, SIGNAL(released()), this, SLOT(slotSalvarArquivo()));
+    connect(btFechar, SIGNAL(released()), wgMat, SLOT(close()));
+
+    wgMat->show();
+}
+
+void GUIMatrizCoo::slotSalvarArquivo()
+{
+    QString caminho = QFileDialog::getSaveFileName(this, "Salvar Arquivo", QDir::currentPath());
+
+    if(!caminho.isEmpty())
+    {
+        caminho.append(".txt");
+        QFile file(caminho);
+        if(file.open(QIODevice::ReadWrite))
+        {
+            QTextStream stream(&file);
+            stream << mat + "\n\n";
+            stream << txtMat->toPlainText();
+            file.flush();
+            file.close();
+            QMessageBox::information(this, tr("Salvo"),tr("Salvo com sucesso em %1.").arg(caminho));
+        }
+        else
+        {
+            QMessageBox::critical(this, tr("Error"), tr("Impossivel salvar arquivo"));
+            return;
+        }
+    }
 }

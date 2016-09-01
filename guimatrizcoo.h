@@ -7,6 +7,12 @@
 #include <QImage>
 #include <QLabel>
 #include <QMessageBox>
+#include <QPlainTextEdit>
+#include <QDesktopWidget>
+#include <QFileDialog>
+#include <QTextStream>
+
+
 
 namespace Ui {
 class GUIMatrizCoo;
@@ -20,7 +26,7 @@ public:
     explicit GUIMatrizCoo(QWidget *parent = 0);
     ~GUIMatrizCoo();
     QPushButton * getBt(int i);
-    void exibeResults(unsigned short *matrizCoOc, int N);
+    void exibeResults(unsigned short *matrizCoOc, int N, QString mat);
 
 private:
     Ui::GUIMatrizCoo *ui;
@@ -28,6 +34,10 @@ private:
     void createButtons();
     unsigned short *matrizCoOc;
     int N;
+    QPlainTextEdit* txtMat;
+    QString mat;
+private slots:
+    void slotSalvarArquivo();
 };
 
 #endif // GUIMATRIZCOO_H

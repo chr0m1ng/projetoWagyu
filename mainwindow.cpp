@@ -86,7 +86,14 @@ void MainWindow::createConnections()
     connect(ui->extrairPb, SIGNAL(released()), this, SLOT(slotExtracao()));
 
     matriz = new GUIMatrizCoo();
-    connect(matriz->getBt(0), SIGNAL(released()), this, SLOT(slotResult()));
+    connect(matriz->getBt(0), SIGNAL(released()), this, SLOT(slotMatrizesCoOc135()));
+    connect(matriz->getBt(1), SIGNAL(released()), this, SLOT(slotMatrizesCoOc90()));
+    connect(matriz->getBt(2), SIGNAL(released()), this, SLOT(slotMatrizesCoOc45()));
+    connect(matriz->getBt(3), SIGNAL(released()), this, SLOT(slotMatrizesCoOc0()));
+    connect(matriz->getBt(5), SIGNAL(released()), this, SLOT(slotMatrizesCoOc0()));
+    connect(matriz->getBt(6), SIGNAL(released()), this, SLOT(slotMatrizesCoOc45()));
+    connect(matriz->getBt(7), SIGNAL(released()), this, SLOT(slotMatrizesCoOc90()));
+    connect(matriz->getBt(8), SIGNAL(released()), this, SLOT(slotMatrizesCoOc135()));
 
 }
 
@@ -252,17 +259,24 @@ void MainWindow::createNT()
  *
  */
 
-void MainWindow::slotMatrizesCoOc(int i)
+void MainWindow::slotMatrizesCoOc0()
 {
-    switch (i)
-    {
-        case 1:
+    matriz->exibeResults(ath->getMc0(), pow(2, openFile->getNc()), "Matriz 0º");
+}
 
+void MainWindow::slotMatrizesCoOc45()
+{
+    matriz->exibeResults(ath->getMc45(), pow(2, openFile->getNc()), "Matriz 45º");
+}
 
-            break;
-        default:
-            break;
-    }
+void MainWindow::slotMatrizesCoOc90()
+{
+    matriz->exibeResults(ath->getMc90(), pow(2, openFile->getNc()), "Matriz 90º");
+}
+
+void MainWindow::slotMatrizesCoOc135()
+{
+    matriz->exibeResults(ath->getMc135(), pow(2, openFile->getNc()), "Matriz 135º");
 }
 
 void MainWindow::slotOpen()
