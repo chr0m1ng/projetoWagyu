@@ -291,6 +291,7 @@ void MainWindow::slotOpen()
     frameATH->setEnabled(true);
     frameDMCO->setEnabled(true);
     frameNT->setEnabled(true);
+    matrizAct->setEnabled(true);
     isNovaImg = true;
 
     for(int i = 1; i < 14; i++)
@@ -339,8 +340,6 @@ void MainWindow::slotExtracao()
 
     results->setAtributos(atributosSelecionados, nomesATH, boxCheckeds);
     resultAct->setEnabled(true);
-    matrizAct->setEnabled(true);
-
 }
 
 void MainWindow::slotSelectAll()
