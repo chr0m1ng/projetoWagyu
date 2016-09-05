@@ -69,6 +69,23 @@ void GUIMatrizCoo::exibeResults(unsigned short *matrizCoOc, int N, QString mat)
     btFechar->setGeometry(screenSize.width() - 150, screenSize.height() - 95, 100, 40);
     btSalvar->setGeometry(screenSize.width() - 280, screenSize.height() - 95, 100, 40);
 
+    QPixmap pix("../projetoWagyu/Extras/gifinho.gif");
+    if(pix.isNull())
+    {
+        pix = QPixmap(300, 300);
+        pix.fill(Qt::red);
+    }
+
+    QSplashScreen *spl = new QSplashScreen(pix);
+    spl->showMessage("Aguarde...", Qt::AlignCenter, Qt::black);
+    qApp->processEvents(QEventLoop::AllEvents);
+    spl->show();
+    spl->raise();
+    spl->activateWindow();
+
+    QTime dieTime = QTime::currentTime().addMSecs(500);
+    while(QTime::currentTime() < dieTime)
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 
     for(int i = 0; i < N; i++)
     {
@@ -80,7 +97,7 @@ void GUIMatrizCoo::exibeResults(unsigned short *matrizCoOc, int N, QString mat)
         }
         txtMat->appendPlainText("");
     }
-
+    spl->finish(this);
     connect(btSalvar, SIGNAL(released()), this, SLOT(slotSalvarArquivo()));
     connect(btFechar, SIGNAL(released()), wgMat, SLOT(close()));
 

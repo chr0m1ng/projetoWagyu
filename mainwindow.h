@@ -11,6 +11,7 @@
 #include <QEventLoop>
 #include <QMenu>
 #include <cmath>
+#include <QTime>
 #include "guimatrizcoo.h"
 #include "guiimageloader.h"
 #include "guiresults.h"

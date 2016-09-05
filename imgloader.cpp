@@ -1,7 +1,6 @@
 #include "imgloader.h"
 #include <stdio.h>
 #include <math.h>
-#include <omp.h>
 
 ImgLoader::ImgLoader(QWidget *parent) : QWidget(parent)
 {
@@ -15,13 +14,12 @@ ImgLoader::ImgLoader(QWidget *parent) : QWidget(parent)
 
 ImgLoader::~ImgLoader()
 {
-    QFile::remove("newImgRAW.pgm");
     delete imgPreview;
 }
 
-void ImgLoader::carregarImg(int largura, int altura, int nc)
+bool ImgLoader::carregarImg(int largura, int altura, int nc, QString caminho)
 {
-    caminho = QFileDialog::getOpenFileName(this, tr("Carregar Arquivo"), QDir::currentPath());
+    this->caminho = caminho;
 
     if(!caminho.isEmpty())
     {
@@ -43,7 +41,7 @@ void ImgLoader::carregarImg(int largura, int altura, int nc)
         if(imgRAW == NULL)
         {
             QMessageBox::information(this, tr("Image Viewer"),tr("Nao foi possivel carregar file %1.").arg(caminho));
-            return;
+            return false;
         }
         fprintf(imgRAW, "P2\n%d %d\n%d\n", largura, altura, (int)pow(2, nc));
         for(int i = 0; i < altura; i++)
@@ -59,7 +57,7 @@ void ImgLoader::carregarImg(int largura, int altura, int nc)
         if( imagem.isNull() )
         {
             QMessageBox::information(this, tr("Image Viewer"),tr("Nao foi possivel carregar %1.").arg(caminho));
-            return;
+            return false;
         }
 
         imgPreview -> setPixmap(QPixmap::fromImage(imagem));
@@ -69,12 +67,16 @@ void ImgLoader::carregarImg(int largura, int altura, int nc)
         imgPreview->setToolTip(imgNome);
 
         status = true;
+        QFile::remove("newImgRAW.pgm");
+
+
+        return true;
     }
 
     else
     {
         QMessageBox::information(this, tr("Image Viewer"),tr("Nao foi possivel carregar caminho %1.").arg(caminho));
-        return;
+        return false;
     }
 }
 

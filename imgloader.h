@@ -8,6 +8,7 @@
 #include <QString>
 #include <iostream>
 #include <string.h>
+#include <QSplashScreen>
 #include "readimage.h"
 
 class ImgLoader : public QWidget
@@ -21,7 +22,7 @@ public:
 // Metodos
     QString getCaminho();
     bool getStatus();
-    void carregarImg(int largura, int altura, int nc);
+    bool carregarImg(int largura, int altura, int nc, QString caminho);
     unsigned short *getMatrizOrig();
     QLabel * getImgPreview();
 

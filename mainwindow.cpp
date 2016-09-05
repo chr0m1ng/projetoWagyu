@@ -291,7 +291,6 @@ void MainWindow::slotOpen()
     frameATH->setEnabled(true);
     frameDMCO->setEnabled(true);
     frameNT->setEnabled(true);
-    matrizAct->setEnabled(true);
     isNovaImg = true;
 
     for(int i = 1; i < 14; i++)
@@ -325,6 +324,24 @@ void MainWindow::slotExtracao()
 
     if(loader->getStatus())
     {
+        QPixmap pix("../projetoWagyu/Extras/gifinho.gif");
+        if(pix.isNull())
+        {
+            pix = QPixmap(300, 300);
+            pix.fill(Qt::red);
+        }
+
+        QSplashScreen *spl = new QSplashScreen(pix);
+        spl->showMessage("Aguarde...", Qt::AlignCenter, Qt::black);
+        qApp->processEvents(QEventLoop::AllEvents);
+        spl->show();
+        spl->raise();
+        spl->activateWindow();
+
+        QTime dieTime = QTime::currentTime().addMSecs(500);
+        while(QTime::currentTime() < dieTime)
+            QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+
         if(isNovaImg)
         {
             int NG = pow(2, openFile->getNc());
@@ -332,10 +349,14 @@ void MainWindow::slotExtracao()
             ath = new Haralick(loader->getMatrizOrig(), openFile->getLargura(), openFile->getAltura(), NG, caixaNT->value());
             ath->calcularMatrizCoN(matrizCoN_CPU, caixaDMCO->value());
             ath->atCpu(matrizCoN_CPU, NG);
-
+            matrizAct->setEnabled(true);
             isNovaImg = false;
         }
+
+
         ath->calcATH(atributosSelecionados, boxCheckeds);
+
+        spl->finish(this);
     }
 
     results->setAtributos(atributosSelecionados, nomesATH, boxCheckeds);

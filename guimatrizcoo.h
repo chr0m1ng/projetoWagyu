@@ -11,6 +11,8 @@
 #include <QDesktopWidget>
 #include <QFileDialog>
 #include <QTextStream>
+#include <QTime>
+#include <QSplashScreen>
 
 
 

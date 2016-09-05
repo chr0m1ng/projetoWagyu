@@ -1,5 +1,6 @@
 #include "guiimageloader.h"
 #include "ui_guiimageloader.h"
+#include <QTime>
 
 GUIImageLoader::GUIImageLoader(QWidget *parent) :
     QDialog(parent),
@@ -23,7 +24,6 @@ ImgLoader* GUIImageLoader::getLoader()
 
 void GUIImageLoader::slotGetCaminho()
 {
-    //QMessageBox::warning(this,"Aviso!","Talvez uma mensagem de que o programa parou de responder seja exibida, apenas ignore.",1,0,0);
     largura = ui->LarguraSpinBox->value();
     altura = ui->AlturaSpinBox->value();
     nc = ui->NCspinBox->value();
@@ -39,9 +39,34 @@ void GUIImageLoader::slotGetCaminho()
     }
     else
     {
-        loader->carregarImg(largura, altura, nc);
-        ui->lineCaminho->setText(loader->getCaminho());
         this->close();
+
+        QPixmap pix("../projetoWagyu/Extras/gifinho.gif");
+        if(pix.isNull())
+        {
+            pix = QPixmap(300, 300);
+            pix.fill(Qt::red);
+        }
+
+        QSplashScreen *spl = new QSplashScreen(pix);
+        spl->showMessage("Aguarde...", Qt::AlignCenter, Qt::black);
+        spl->setGeometry(this->geometry().x() - 280, this->geometry().y() - 40, pix.width(), pix.height());
+        qApp->processEvents(QEventLoop::AllEvents);
+
+
+        QString caminho = QFileDialog::getOpenFileName(this, tr("Carregar Arquivo"), QDir::currentPath());
+        spl->show();
+        spl->raise();
+        spl->activateWindow();
+
+        QTime dieTime = QTime::currentTime().addMSecs(1000);
+        while(QTime::currentTime() < dieTime)
+            QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+
+        loader->carregarImg(largura, altura, nc, caminho);
+        ui->lineCaminho->setText(loader->getCaminho());
+
+        spl->finish(this);
     }
 }
 

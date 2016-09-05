@@ -6,6 +6,7 @@
 #include <QFileDialog>
 #include <QScrollArea>
 #include <QLabel>
+#include <QSplashScreen>
 #include "imgloader.h"
 
 namespace Ui {
