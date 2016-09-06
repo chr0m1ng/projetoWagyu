@@ -50,7 +50,6 @@ MainWindow::~MainWindow()
     delete framePreview;
     delete frameATH;
     delete frameDMCO;
-    delete labelPreview;
     delete labelATH;
     delete labelDMCO;
     delete areaPreview;
@@ -317,7 +316,7 @@ void MainWindow::slotExtracao()
 {
     if(results == NULL)
         results = new GUIResults();
-    results->limpaGUI();
+    //results->limpaGUI();
 
     for(int i = 1; i < 14; i++)
         boxCheckeds[i] = caixasDeSelecao[i]->isChecked();

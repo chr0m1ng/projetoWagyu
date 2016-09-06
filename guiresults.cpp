@@ -5,13 +5,6 @@ GUIResults::GUIResults(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::GUIResults)
 {
-    labelsAtributos = new QLabel*[14];
-    lineValue = new QLineEdit*[14];
-    for(int i = 0; i < 13; i++)
-    {
-        lineValue[i] = NULL;
-        labelsAtributos[i] = NULL;
-    }
     ui->setupUi(this);
     this->setWindowTitle("Resultados");
 
@@ -21,8 +14,6 @@ GUIResults::~GUIResults()
 {
     delete frameATH;
     delete atributosSelecionados;
-    delete lineValue;
-    delete labelsAtributos;
     delete nomesATH;
     delete salvar;
     delete fechar;
@@ -39,31 +30,16 @@ void GUIResults::setAtributos(double *&atributosSelecionados, QString *nomesATH,
     createLabels();
 }
 
-
-void GUIResults::limpaGUI()
-{
-    for(int i = 1; i < 14; i++)
-    {
-        if(labelsAtributos[i] != NULL)
-        {
-            delete labelsAtributos[i];
-            delete lineValue[i];
-            labelsAtributos[i] = NULL;
-            lineValue[i] = NULL;
-            boxCheckeds[i] = false;
-        }
-    }
-}
-
 void GUIResults::createFrame()
 {
-    frameATH = new QFrame(this);
+    frameATH = new QPlainTextEdit(this);
     frameATH->setEnabled(true);
     frameATH->setGeometry(20,20,320,330);
     frameATH->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     frameATH->setLineWidth(1);
     frameATH->setFrameShadow(QFrame::Raised);
     frameATH->setFrameShape(QFrame::StyledPanel);
+    frameATH->setReadOnly(true);
     frameATH->setVisible(true);
 
     salvar = new QPushButton("Salvar...", this);
@@ -83,24 +59,13 @@ void GUIResults::createFrame()
 
 void GUIResults::createLabels()
 {
-    int h = 20;
 
     for(int i = 1; i < 14; i++)
     {
         if(boxCheckeds[i])
         {
-            labelsAtributos[i] = new QLabel(nomesATH[i] + " = ", this->frameATH);
-            labelsAtributos[i]->setGeometry(20,h,191,16);
-            labelsAtributos[i]->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-            labelsAtributos[i]->setVisible(true);
-
-            lineValue[i] = new QLineEdit(QString::number(atributosSelecionados[i]), this->frameATH);
-            lineValue[i]->setGeometry(200,h,100,16);
-            lineValue[i]->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-            lineValue[i]->setReadOnly(true);
-            lineValue[i]->setVisible(true);
-
-            h += 20;
+            frameATH->insertPlainText(nomesATH[i] + " = " + QString::number(atributosSelecionados[i]));
+            frameATH->appendPlainText("");
         }
     }
 }
