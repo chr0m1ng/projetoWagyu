@@ -6,7 +6,6 @@ MainWindow::MainWindow(QWidget *parent) :
 ui(new Ui::MainWindow)
 {
     caixasDeSelecao = new QCheckBox*[14];
-    isNovaImg = false;
     boxCheckeds = new bool[14];
     atributosSelecionados = new double[14];
 
@@ -290,7 +289,6 @@ void MainWindow::slotOpen()
     frameATH->setEnabled(true);
     frameDMCO->setEnabled(true);
     frameNT->setEnabled(true);
-    isNovaImg = true;
 
     for(int i = 1; i < 14; i++)
     {
@@ -300,6 +298,14 @@ void MainWindow::slotOpen()
         caixaDMCO->setValue(1);
         caixaNT->setValue(4);
     }
+
+
+    int NG = pow(2, openFile->getNc());
+    matrizCoN_CPU = new double[NG * NG];
+    ath = new Haralick(loader->getMatrizOrig(), openFile->getLargura(), openFile->getAltura(), NG, caixaNT->value());
+    ath->calcularMatrizCoN(matrizCoN_CPU, caixaDMCO->value());
+    ath->atCpu(matrizCoN_CPU, NG);
+    matrizAct->setEnabled(true);
 }
 
 void MainWindow::slotResult()
@@ -340,18 +346,6 @@ void MainWindow::slotExtracao()
         QTime dieTime = QTime::currentTime().addMSecs(500);
         while(QTime::currentTime() < dieTime)
             QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
-
-        if(isNovaImg)
-        {
-            int NG = pow(2, openFile->getNc());
-            matrizCoN_CPU = new double[NG * NG];
-            ath = new Haralick(loader->getMatrizOrig(), openFile->getLargura(), openFile->getAltura(), NG, caixaNT->value());
-            ath->calcularMatrizCoN(matrizCoN_CPU, caixaDMCO->value());
-            ath->atCpu(matrizCoN_CPU, NG);
-            matrizAct->setEnabled(true);
-            isNovaImg = false;
-        }
-
 
         ath->calcATH(atributosSelecionados, boxCheckeds);
 

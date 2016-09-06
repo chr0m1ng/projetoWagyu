@@ -41,7 +41,6 @@ private:
     double * atributosSelecionados;
 
     bool * boxCheckeds;
-    bool isNovaImg;
 
     // GUI
         // MenuBar
