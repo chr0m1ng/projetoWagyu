@@ -284,6 +284,9 @@ void MainWindow::slotOpen()
     if(openFile == NULL)
         openFile = new GUIImageLoader();
 
+    openFile->x = this->geometry().x() + this->centralWidget()->geometry().x() + 30;
+    openFile->y = this->geometry().y() + this->centralWidget()->geometry().y() + 40;
+
     openFile->exec();
     loader = openFile->getLoader();
     areaPreview->setWidget(loader->getImgPreview());
@@ -328,11 +331,13 @@ void MainWindow::slotExtracao()
         if(pix.isNull())
         {
             pix = QPixmap(300, 300);
-            pix.fill(Qt::red);
+            QColor color(189,237,2,255);
+            pix.fill(color);
         }
 
         QSplashScreen *spl = new QSplashScreen(pix);
         spl->showMessage("Aguarde...", Qt::AlignCenter, Qt::black);
+        spl->setGeometry(this->geometry().x() + (this->centralWidget()->width()/2) - 150, this->geometry().y() + (this->centralWidget()->height()/2) - 150, 300, 300);
         qApp->processEvents(QEventLoop::AllEvents);
         spl->show();
         spl->raise();

@@ -21,6 +21,7 @@ public:
     explicit GUIImageLoader(QWidget *parent = 0);
     ~GUIImageLoader();
     ImgLoader* getLoader();
+    int x, y;
     int getLargura();
     int getAltura();
     int getNc();
