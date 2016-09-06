@@ -22,10 +22,10 @@ public:
     }
     ~Haralick();
 
-    unsigned short * getMc0();
-    unsigned short * getMc45();
-    unsigned short * getMc90();
-    unsigned short * getMc135();
+    double * getMc0();
+    double * getMc45();
+    double * getMc90();
+    double * getMc135();
 
 
 private:
@@ -34,10 +34,10 @@ private:
     int distancia;
     int ntrds;
     unsigned short * matrizImg;
-    unsigned short * matrizCo0;
-    unsigned short * matrizCo45;
-    unsigned short * matrizCo90;
-    unsigned short * matrizCo135;
+    double * matrizCo0;
+    double * matrizCo45;
+    double * matrizCo90;
+    double * matrizCo135;
 
     double mediaH(const double * __restrict__ p, int tam);
 

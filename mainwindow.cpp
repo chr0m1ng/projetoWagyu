@@ -88,6 +88,7 @@ void MainWindow::createConnections()
     connect(matriz->getBt(1), SIGNAL(released()), this, SLOT(slotMatrizesCoOc90()));
     connect(matriz->getBt(2), SIGNAL(released()), this, SLOT(slotMatrizesCoOc45()));
     connect(matriz->getBt(3), SIGNAL(released()), this, SLOT(slotMatrizesCoOc0()));
+    connect(matriz->getBt(4), SIGNAL(released()), this, SLOT(slotMatrizesCoOc()));
     connect(matriz->getBt(5), SIGNAL(released()), this, SLOT(slotMatrizesCoOc0()));
     connect(matriz->getBt(6), SIGNAL(released()), this, SLOT(slotMatrizesCoOc45()));
     connect(matriz->getBt(7), SIGNAL(released()), this, SLOT(slotMatrizesCoOc90()));
@@ -257,6 +258,11 @@ void MainWindow::createNT()
  *
  */
 
+void MainWindow::slotMatrizesCoOc()
+{
+    matriz->exibeResults(this->matrizCoN_CPU, pow(2, openFile->getNc()), "Matriz Total");
+}
+
 void MainWindow::slotMatrizesCoOc0()
 {
     matriz->exibeResults(ath->getMc0(), pow(2, openFile->getNc()), "Matriz 0º");
@@ -290,6 +296,25 @@ void MainWindow::slotOpen()
     frameDMCO->setEnabled(true);
     frameNT->setEnabled(true);
 
+    QPixmap pix("../projetoWagyu/Extras/gifinho.gif");
+    if(pix.isNull())
+    {
+        pix = QPixmap(300, 300);
+        pix.fill(Qt::red);
+    }
+
+    QSplashScreen *spl = new QSplashScreen(pix);
+    spl->showMessage("Calculando...", Qt::AlignCenter, Qt::black);
+    qApp->processEvents(QEventLoop::AllEvents);
+
+    spl->show();
+    spl->raise();
+    spl->activateWindow();
+
+    QTime dieTime = QTime::currentTime().addMSecs(1000);
+    while(QTime::currentTime() < dieTime)
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+
     for(int i = 1; i < 14; i++)
     {
         atributosSelecionados[i] = -2;
@@ -306,6 +331,8 @@ void MainWindow::slotOpen()
     ath->calcularMatrizCoN(matrizCoN_CPU, caixaDMCO->value());
     ath->atCpu(matrizCoN_CPU, NG);
     matrizAct->setEnabled(true);
+
+    spl->finish(this);
 }
 
 void MainWindow::slotResult()
@@ -337,7 +364,7 @@ void MainWindow::slotExtracao()
         }
 
         QSplashScreen *spl = new QSplashScreen(pix);
-        spl->showMessage("Aguarde...", Qt::AlignCenter, Qt::black);
+        spl->showMessage("Extraindo...", Qt::AlignCenter, Qt::black);
         qApp->processEvents(QEventLoop::AllEvents);
         spl->show();
         spl->raise();
