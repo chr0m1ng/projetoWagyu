@@ -48,7 +48,7 @@ QPushButton * GUIMatrizCoo::getBt(int i)
     return btMatriz[i];
 }
 
-void GUIMatrizCoo::exibeResults(unsigned short *matrizCoOc, int N, QString mat)
+void GUIMatrizCoo::exibeResults(double *matrizCoOc, int N, QString mat)
 {
     this->hide();
     this->matrizCoOc = matrizCoOc;
@@ -77,7 +77,7 @@ void GUIMatrizCoo::exibeResults(unsigned short *matrizCoOc, int N, QString mat)
     }
 
     QSplashScreen *spl = new QSplashScreen(pix);
-    spl->showMessage("Aguarde...", Qt::AlignCenter, Qt::black);
+    spl->showMessage("Abrindo...", Qt::AlignCenter, Qt::black);
     qApp->processEvents(QEventLoop::AllEvents);
     spl->show();
     spl->raise();
@@ -87,9 +87,9 @@ void GUIMatrizCoo::exibeResults(unsigned short *matrizCoOc, int N, QString mat)
     while(QTime::currentTime() < dieTime)
         QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 
-    for(int i = 0; i < N; i++)
+    for(int i = 0; i < 4; i++)
     {
-        for(int j = 0; j < N; j++)
+        for(int j = 0; j < 4; j++)
         {
             QString tmp = QString::number(matrizCoOc[i]) + " ";
             txtMat->insertPlainText(tmp);

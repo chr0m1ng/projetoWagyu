@@ -53,7 +53,6 @@ private:
     double * atributosSelecionados;
 
     bool * boxCheckeds;
-    bool isNovaImg;
 
     // GUI
         // MenuBar
@@ -98,6 +97,7 @@ private slots:
     void slotMatrizesCoOc45();
     void slotMatrizesCoOc90();
     void slotMatrizesCoOc135();
+    void slotMatrizesCoOc();
 
     //Slots CheckBox
     void slotSelectAll();

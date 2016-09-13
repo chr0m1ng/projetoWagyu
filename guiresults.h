@@ -8,6 +8,7 @@
 #include <QLineEdit>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QPlainTextEdit>
 
 namespace Ui {
 class GUIResults;
@@ -22,14 +23,10 @@ public:
     ~GUIResults();
     void setAtributos(double *&atributosSelecionados, QString*nomesATH, bool * boxCheckeds);
 
-    void limpaGUI();
-
 private:
     Ui::GUIResults *ui;
 
-    QFrame *frameATH;
-    QLabel **labelsAtributos;
-    QLineEdit **lineValue;
+    QPlainTextEdit *frameATH;
     QString *nomesATH;
     double *atributosSelecionados;
     bool *boxCheckeds;

@@ -50,7 +50,7 @@ void GUIImageLoader::slotGetCaminho()
         }
 
         QSplashScreen *spl = new QSplashScreen(pix);
-        spl->showMessage("Aguarde...", Qt::AlignCenter, Qt::black);
+        spl->showMessage("Abrindo...", Qt::AlignCenter, Qt::black);
         spl->setGeometry(x, y, pix.width(), pix.height());
         qApp->processEvents(QEventLoop::AllEvents);
 

@@ -28,13 +28,13 @@ public:
     explicit GUIMatrizCoo(QWidget *parent = 0);
     ~GUIMatrizCoo();
     QPushButton * getBt(int i);
-    void exibeResults(unsigned short *matrizCoOc, int N, QString mat);
+    void exibeResults(double *matrizCoOc, int N, QString mat);
 
 private:
     Ui::GUIMatrizCoo *ui;
     QPushButton **btMatriz;
     void createButtons();
-    unsigned short *matrizCoOc;
+    double *matrizCoOc;
     int N;
     QPlainTextEdit* txtMat;
     QString mat;

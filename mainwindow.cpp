@@ -6,7 +6,6 @@ MainWindow::MainWindow(QWidget *parent) :
 ui(new Ui::MainWindow)
 {
     caixasDeSelecao = new QCheckBox*[14];
-    isNovaImg = false;
     boxCheckeds = new bool[14];
     atributosSelecionados = new double[14];
 
@@ -50,7 +49,6 @@ MainWindow::~MainWindow()
     delete framePreview;
     delete frameATH;
     delete frameDMCO;
-    delete labelPreview;
     delete labelATH;
     delete labelDMCO;
     delete areaPreview;
@@ -90,6 +88,7 @@ void MainWindow::createConnections()
     connect(matriz->getBt(1), SIGNAL(released()), this, SLOT(slotMatrizesCoOc90()));
     connect(matriz->getBt(2), SIGNAL(released()), this, SLOT(slotMatrizesCoOc45()));
     connect(matriz->getBt(3), SIGNAL(released()), this, SLOT(slotMatrizesCoOc0()));
+    connect(matriz->getBt(4), SIGNAL(released()), this, SLOT(slotMatrizesCoOc()));
     connect(matriz->getBt(5), SIGNAL(released()), this, SLOT(slotMatrizesCoOc0()));
     connect(matriz->getBt(6), SIGNAL(released()), this, SLOT(slotMatrizesCoOc45()));
     connect(matriz->getBt(7), SIGNAL(released()), this, SLOT(slotMatrizesCoOc90()));
@@ -259,6 +258,11 @@ void MainWindow::createNT()
  *
  */
 
+void MainWindow::slotMatrizesCoOc()
+{
+    matriz->exibeResults(this->matrizCoN_CPU, pow(2, openFile->getNc()), "Matriz Total");
+}
+
 void MainWindow::slotMatrizesCoOc0()
 {
     matriz->exibeResults(ath->getMc0(), pow(2, openFile->getNc()), "Matriz 0º");
@@ -294,7 +298,25 @@ void MainWindow::slotOpen()
     frameATH->setEnabled(true);
     frameDMCO->setEnabled(true);
     frameNT->setEnabled(true);
-    isNovaImg = true;
+
+    QPixmap pix("../projetoWagyu/Extras/gifinho.gif");
+    if(pix.isNull())
+    {
+        pix = QPixmap(300, 300);
+        pix.fill(Qt::red);
+    }
+
+    QSplashScreen *spl = new QSplashScreen(pix);
+    spl->showMessage("Calculando...", Qt::AlignCenter, Qt::black);
+    qApp->processEvents(QEventLoop::AllEvents);
+
+    spl->show();
+    spl->raise();
+    spl->activateWindow();
+
+    QTime dieTime = QTime::currentTime().addMSecs(1000);
+    while(QTime::currentTime() < dieTime)
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 
     for(int i = 1; i < 14; i++)
     {
@@ -304,6 +326,16 @@ void MainWindow::slotOpen()
         caixaDMCO->setValue(1);
         caixaNT->setValue(4);
     }
+
+
+    int NG = pow(2, openFile->getNc());
+    matrizCoN_CPU = new double[NG * NG];
+    ath = new Haralick(loader->getMatrizOrig(), openFile->getLargura(), openFile->getAltura(), NG, caixaNT->value());
+    ath->calcularMatrizCoN(matrizCoN_CPU, caixaDMCO->value());
+    ath->atCpu(matrizCoN_CPU, NG);
+    matrizAct->setEnabled(true);
+
+    spl->finish(this);
 }
 
 void MainWindow::slotResult()
@@ -320,7 +352,7 @@ void MainWindow::slotExtracao()
 {
     if(results == NULL)
         results = new GUIResults();
-    results->limpaGUI();
+    //results->limpaGUI();
 
     for(int i = 1; i < 14; i++)
         boxCheckeds[i] = caixasDeSelecao[i]->isChecked();
@@ -336,7 +368,7 @@ void MainWindow::slotExtracao()
         }
 
         QSplashScreen *spl = new QSplashScreen(pix);
-        spl->showMessage("Aguarde...", Qt::AlignCenter, Qt::black);
+        spl->showMessage("Extraindo...", Qt::AlignCenter, Qt::black);
         spl->setGeometry(this->geometry().x() + (this->centralWidget()->width()/2) - 150, this->geometry().y() + (this->centralWidget()->height()/2) - 150, 300, 300);
         qApp->processEvents(QEventLoop::AllEvents);
         spl->show();
@@ -346,18 +378,6 @@ void MainWindow::slotExtracao()
         QTime dieTime = QTime::currentTime().addMSecs(500);
         while(QTime::currentTime() < dieTime)
             QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
-
-        if(isNovaImg)
-        {
-            int NG = pow(2, openFile->getNc());
-            matrizCoN_CPU = new double[NG * NG];
-            ath = new Haralick(loader->getMatrizOrig(), openFile->getLargura(), openFile->getAltura(), NG, caixaNT->value());
-            ath->calcularMatrizCoN(matrizCoN_CPU, caixaDMCO->value());
-            ath->atCpu(matrizCoN_CPU, NG);
-            matrizAct->setEnabled(true);
-            isNovaImg = false;
-        }
-
 
         ath->calcATH(atributosSelecionados, boxCheckeds);
 
