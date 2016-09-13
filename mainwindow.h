@@ -13,7 +13,6 @@
 #include <cmath>
 #include <QTime>
 #include <QMovie>
-#include <QPainter>
 #include "guimatrizcoo.h"
 #include "guiimageloader.h"
 #include "guiresults.h"
@@ -31,14 +30,6 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-
-    void paintEvent(QPaintEvent* event)
-    {
-          QPainter painter(this);
-          painter.drawPixmap(gif->frameRect(), gif->currentPixmap());
-          painter.drawText(50,gif->frameRect().height()-fontMetrics().height(),
-                             QString::number(QDateTime::currentMSecsSinceEpoch()));
-    }
 
 private:
     Ui::MainWindow *ui;
