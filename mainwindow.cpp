@@ -288,6 +288,11 @@ void MainWindow::slotOpen()
     if(openFile == NULL)
         openFile = new GUIImageLoader();
 
+    int x = this->geometry().x() + this->centralWidget()->geometry().x() + 30;
+    int y = this->geometry().y() + this->centralWidget()->geometry().y() + 40;
+    openFile->x = x;
+    openFile->y = y;
+
     openFile->exec();
     loader = openFile->getLoader();
     areaPreview->setWidget(loader->getImgPreview());
@@ -299,12 +304,14 @@ void MainWindow::slotOpen()
     QPixmap pix("../projetoWagyu/Extras/gifinho.gif");
     if(pix.isNull())
     {
-        pix = QPixmap(300, 300);
-        pix.fill(Qt::red);
+        pix = QPixmap(311, 301);
+        QColor color(189,237,2,255);
+        pix.fill(color);
     }
 
     QSplashScreen *spl = new QSplashScreen(pix);
     spl->showMessage("Calculando...", Qt::AlignCenter, Qt::black);
+    spl->setGeometry(x, y, pix.width(), pix.height());
     qApp->processEvents(QEventLoop::AllEvents);
 
     spl->show();
@@ -360,11 +367,13 @@ void MainWindow::slotExtracao()
         if(pix.isNull())
         {
             pix = QPixmap(300, 300);
-            pix.fill(Qt::red);
+            QColor color(189,237,2,255);
+            pix.fill(color);
         }
 
         QSplashScreen *spl = new QSplashScreen(pix);
         spl->showMessage("Extraindo...", Qt::AlignCenter, Qt::black);
+        spl->setGeometry(this->geometry().x() + (this->centralWidget()->width()/2) - 150, this->geometry().y() + (this->centralWidget()->height()/2) - 150, 300, 300);
         qApp->processEvents(QEventLoop::AllEvents);
         spl->show();
         spl->raise();

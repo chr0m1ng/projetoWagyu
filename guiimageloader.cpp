@@ -44,13 +44,14 @@ void GUIImageLoader::slotGetCaminho()
         QPixmap pix("../projetoWagyu/Extras/gifinho.gif");
         if(pix.isNull())
         {
-            pix = QPixmap(300, 300);
-            pix.fill(Qt::red);
+            pix = QPixmap(311, 301);
+            QColor color(189,237,2,255);
+            pix.fill(color);
         }
 
         QSplashScreen *spl = new QSplashScreen(pix);
         spl->showMessage("Abrindo...", Qt::AlignCenter, Qt::black);
-        spl->setGeometry(this->geometry().x() - 280, this->geometry().y() - 40, pix.width(), pix.height());
+        spl->setGeometry(x, y, pix.width(), pix.height());
         qApp->processEvents(QEventLoop::AllEvents);
 
 
