@@ -21,10 +21,12 @@ public:
     explicit GUIImageLoader(QWidget *parent = 0);
     ~GUIImageLoader();
     ImgLoader* getLoader();
+    QRect q;
     int x, y;
     int getLargura();
     int getAltura();
     int getNc();
+    void setQRect(QRect);
 
 private:
     Ui::GUIImageLoader *ui;

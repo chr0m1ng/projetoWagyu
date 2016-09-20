@@ -43,9 +43,9 @@ bool ImgLoader::carregarImg(int largura, int altura, int nc, QString caminho)
             QMessageBox::information(this, tr("Image Viewer"),tr("Nao foi possivel carregar file %1.").arg(caminho));
             return false;
         }
-        fprintf(imgRAW, "P2\n%d %d\n%d\n", largura, altura, (int)pow(2, nc));
-        for(int i = 0; i < altura; i++)
-            for(int j = 0; j < largura; j++)
+        fprintf(imgRAW, "P2\n%d %d\n%d\n", altura, largura, (int)pow(2, nc) - 1);
+        for(int i = 0; i < largura; i++)
+            for(int j = 0; j < altura; j++)
                 fprintf(imgRAW, "%d\n", (int) st_image.vi_vector[i * altura + j]);
         fclose(imgRAW);
 
@@ -61,7 +61,7 @@ bool ImgLoader::carregarImg(int largura, int altura, int nc, QString caminho)
         }
 
         imgPreview -> setPixmap(QPixmap::fromImage(imagem));
-        //imgPreview -> adjustSize();
+        imgPreview -> adjustSize();
         QString imgNome = caminho.remove(0, pos + 3);
 
         imgPreview->setToolTip(imgNome);
@@ -93,6 +93,11 @@ QString ImgLoader::getCaminho()
 bool ImgLoader::getStatus()
 {
     return status;
+}
+
+void ImgLoader::setCaminho(QString caminho)
+{
+    this->caminho = caminho;
 }
 
 short unsigned * ImgLoader::getMatrizOrig()

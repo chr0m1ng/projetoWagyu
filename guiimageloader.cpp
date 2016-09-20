@@ -36,6 +36,7 @@ void GUIImageLoader::slotGetCaminho()
     {
         msg.setText("Preencha os campos acima com os valores correspondente a imagem a ser aberta!");
         msg.exec();
+        msg.move(q.x(), q.y());
     }
     else
     {
@@ -64,11 +65,22 @@ void GUIImageLoader::slotGetCaminho()
         while(QTime::currentTime() < dieTime)
             QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 
-        loader->carregarImg(largura, altura, nc, caminho);
-        ui->lineCaminho->setText(loader->getCaminho());
+        if(!loader->carregarImg(largura, altura, nc, caminho))
+        {
+            spl->finish(this);
+            loader->setCaminho(NULL);
+        }
 
+        ui->lineCaminho->setText(loader->getCaminho());
         spl->finish(this);
     }
+}
+
+void GUIImageLoader::setQRect(QRect q)
+{
+    this->q = q;
+    this->setGeometry(q.x(), q.y(), this->width(), this->height());
+    this->raise();
 }
 
 int GUIImageLoader::getLargura()

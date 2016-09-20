@@ -25,6 +25,7 @@ public:
     bool carregarImg(int largura, int altura, int nc, QString caminho);
     unsigned short *getMatrizOrig();
     QLabel * getImgPreview();
+    void setCaminho(QString caminho);
 
 private:
 

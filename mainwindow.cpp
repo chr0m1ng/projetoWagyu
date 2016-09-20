@@ -33,9 +33,7 @@ ui(new Ui::MainWindow)
     frameDMCO->setEnabled(false);
     frameNT->setEnabled(false);
 
-
-
-
+    this->setGeometry(QStyle::alignedRect(Qt::LeftToRight, Qt::AlignCenter, this->size(), qApp->desktop()->availableGeometry()));
 // MENU BAR
     createActions();
     createMenu();
@@ -286,8 +284,10 @@ void MainWindow::slotMatrizesCoOc135()
 void MainWindow::slotOpen()
 {
     if(openFile == NULL)
+    {
         openFile = new GUIImageLoader();
-
+        openFile->setQRect(QStyle::alignedRect(Qt::LeftToRight, Qt::AlignCenter, this->size(), qApp->desktop()->availableGeometry()));
+    }
     int x = this->geometry().x() + this->centralWidget()->geometry().x() + 30;
     int y = this->geometry().y() + this->centralWidget()->geometry().y() + 40;
     openFile->x = x;
@@ -295,51 +295,53 @@ void MainWindow::slotOpen()
 
     openFile->exec();
     loader = openFile->getLoader();
-    areaPreview->setWidget(loader->getImgPreview());
-    ui->extrairPb->setEnabled(true);
-    frameATH->setEnabled(true);
-    frameDMCO->setEnabled(true);
-    frameNT->setEnabled(true);
-
-    QPixmap pix("../projetoWagyu/Extras/gifinho.gif");
-    if(pix.isNull())
+    if(loader->getCaminho()!= NULL)
     {
-        pix = QPixmap(311, 301);
-        QColor color(189,237,2,255);
-        pix.fill(color);
+        areaPreview->setWidget(loader->getImgPreview());
+        ui->extrairPb->setEnabled(true);
+        frameATH->setEnabled(true);
+        frameDMCO->setEnabled(true);
+        frameNT->setEnabled(true);
+
+        QPixmap pix("../projetoWagyu/Extras/gifinho.gif");
+        if(pix.isNull())
+        {
+            pix = QPixmap(311, 301);
+            QColor color(189,237,2,255);
+            pix.fill(color);
+        }
+
+        QSplashScreen *spl = new QSplashScreen(pix);
+        spl->showMessage("Calculando...", Qt::AlignCenter, Qt::black);
+        spl->setGeometry(x, y, pix.width(), pix.height());
+        qApp->processEvents(QEventLoop::AllEvents);
+
+        spl->show();
+        spl->raise();
+        spl->activateWindow();
+
+        QTime dieTime = QTime::currentTime().addMSecs(1000);
+        while(QTime::currentTime() < dieTime)
+            QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+
+        for(int i = 1; i < 14; i++)
+        {
+            atributosSelecionados[i] = -2;
+            boxCheckeds[i] = false;
+            caixasDeSelecao[i]->setChecked(false);
+            caixaDMCO->setValue(1);
+            caixaNT->setValue(4);
+        }
+
+
+        int NG = pow(2, openFile->getNc());
+        matrizCoN_CPU = new double[NG * NG];
+        ath = new Haralick(loader->getMatrizOrig(), openFile->getLargura(), openFile->getAltura(), NG, caixaNT->value());
+        ath->calcularMatrizCoN(matrizCoN_CPU, caixaDMCO->value());
+        ath->atCpu(matrizCoN_CPU, NG);
+        matrizAct->setEnabled(true);
+        spl->finish(this);
     }
-
-    QSplashScreen *spl = new QSplashScreen(pix);
-    spl->showMessage("Calculando...", Qt::AlignCenter, Qt::black);
-    spl->setGeometry(x, y, pix.width(), pix.height());
-    qApp->processEvents(QEventLoop::AllEvents);
-
-    spl->show();
-    spl->raise();
-    spl->activateWindow();
-
-    QTime dieTime = QTime::currentTime().addMSecs(1000);
-    while(QTime::currentTime() < dieTime)
-        QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
-
-    for(int i = 1; i < 14; i++)
-    {
-        atributosSelecionados[i] = -2;
-        boxCheckeds[i] = false;
-        caixasDeSelecao[i]->setChecked(false);
-        caixaDMCO->setValue(1);
-        caixaNT->setValue(4);
-    }
-
-
-    int NG = pow(2, openFile->getNc());
-    matrizCoN_CPU = new double[NG * NG];
-    ath = new Haralick(loader->getMatrizOrig(), openFile->getLargura(), openFile->getAltura(), NG, caixaNT->value());
-    ath->calcularMatrizCoN(matrizCoN_CPU, caixaDMCO->value());
-    ath->atCpu(matrizCoN_CPU, NG);
-    matrizAct->setEnabled(true);
-
-    spl->finish(this);
 }
 
 void MainWindow::slotResult()
