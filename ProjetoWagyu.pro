@@ -18,7 +18,6 @@ SOURCES += main.cpp\
     hex2int.cxx \
     readimage.cpp \
     haralick.cpp \
-    guiimageloader.cpp \
     guiresults.cpp \
     guimatrizcoo.cpp
 
@@ -28,12 +27,10 @@ HEADERS  += mainwindow.h \
     globalvar.h \
     readimage.h \
     haralick.h \
-    guiimageloader.h \
     guiresults.h \
     guimatrizcoo.h
 
 FORMS    += mainwindow.ui \
-    guiimageloader.ui \
     guiresults.ui \
     guimatrizcoo.ui
 

@@ -56,7 +56,6 @@ MainWindow::~MainWindow()
     delete ath;
     delete loader;
     delete openAct;
-    delete openFile;
     delete resultAct;
     delete matrizAct;
     delete [] boxCheckeds;
@@ -258,43 +257,40 @@ void MainWindow::createNT()
 
 void MainWindow::slotMatrizesCoOc()
 {
-    matriz->exibeResults(this->matrizCoN_CPU, pow(2, openFile->getNc()), "Matriz Total");
+    matriz->exibeResults(this->matrizCoN_CPU, pow(2, 12), "Matriz Total");
 }
 
 void MainWindow::slotMatrizesCoOc0()
 {
-    matriz->exibeResults(ath->getMc0(), pow(2, openFile->getNc()), "Matriz 0º");
+    matriz->exibeResults(ath->getMc0(), pow(2, 12), "Matriz 0º");
 }
 
 void MainWindow::slotMatrizesCoOc45()
 {
-    matriz->exibeResults(ath->getMc45(), pow(2, openFile->getNc()), "Matriz 45º");
+    matriz->exibeResults(ath->getMc45(), pow(2, 12), "Matriz 45º");
 }
 
 void MainWindow::slotMatrizesCoOc90()
 {
-    matriz->exibeResults(ath->getMc90(), pow(2, openFile->getNc()), "Matriz 90º");
+    matriz->exibeResults(ath->getMc90(), pow(2, 12), "Matriz 90º");
 }
 
 void MainWindow::slotMatrizesCoOc135()
 {
-    matriz->exibeResults(ath->getMc135(), pow(2, openFile->getNc()), "Matriz 135º");
+    matriz->exibeResults(ath->getMc135(), pow(2, 12), "Matriz 135º");
 }
 
 void MainWindow::slotOpen()
 {
-    if(openFile == NULL)
-    {
-        openFile = new GUIImageLoader();
-        openFile->setQRect(QStyle::alignedRect(Qt::LeftToRight, Qt::AlignCenter, this->size(), qApp->desktop()->availableGeometry()));
-    }
+    if(loader == NULL)
+        loader = new ImgLoader();
     int x = this->geometry().x() + this->centralWidget()->geometry().x() + 30;
     int y = this->geometry().y() + this->centralWidget()->geometry().y() + 40;
-    openFile->x = x;
-    openFile->y = y;
+    loader->x = x;
+    loader->y = y;
 
-    openFile->exec();
-    loader = openFile->getLoader();
+    loader->carregaCaminho();
+
     if(loader->getCaminho()!= NULL)
     {
         areaPreview->setWidget(loader->getImgPreview());
@@ -334,9 +330,9 @@ void MainWindow::slotOpen()
         }
 
 
-        int NG = pow(2, openFile->getNc());
+        int NG = pow(2, 12);
         matrizCoN_CPU = new double[NG * NG];
-        ath = new Haralick(loader->getMatrizOrig(), openFile->getLargura(), openFile->getAltura(), NG, caixaNT->value());
+        ath = new Haralick(loader->getMatrizOrig(), loader->getLargura(), loader->getAltura(), NG, caixaNT->value());
         ath->calcularMatrizCoN(matrizCoN_CPU, caixaDMCO->value());
         ath->atCpu(matrizCoN_CPU, NG);
         matrizAct->setEnabled(true);

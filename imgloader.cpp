@@ -1,6 +1,6 @@
 #include "imgloader.h"
-#include <stdio.h>
-#include <math.h>
+#include <QCoreApplication>
+#include <QEventLoop>
 
 ImgLoader::ImgLoader(QWidget *parent) : QWidget(parent)
 {
@@ -17,7 +17,54 @@ ImgLoader::~ImgLoader()
     delete imgPreview;
 }
 
-bool ImgLoader::carregarImg(int largura, int altura, int nc, QString caminho)
+bool ImgLoader::carregaCaminho()
+{
+    QPixmap pix("../projetoWagyu/Extras/gifinho.gif");
+    if(pix.isNull())
+    {
+        pix = QPixmap(311, 301);
+        QColor color(189,237,2,255);
+        pix.fill(color);
+    }
+
+    QSplashScreen *spl = new QSplashScreen(pix);
+    spl->showMessage("Abrindo...", Qt::AlignCenter, Qt::black);
+    spl->setGeometry(x, y, pix.width(), pix.height());
+
+
+    QString caminho = QFileDialog::getOpenFileName(this, tr("Carregar Arquivo"), QDir::currentPath());
+    spl->show();
+    spl->raise();
+    spl->activateWindow();
+
+    QTime dieTime = QTime::currentTime().addMSecs(1000);
+    while(QTime::currentTime() < dieTime)
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+
+    int pos = caminho.lastIndexOf("1");
+    QString dimensao = caminho;
+    dimensao = dimensao.replace(pos, 1, "txt");
+
+    QByteArray ba = dimensao.toLatin1();
+    const char *c_str = ba.data();
+
+    std::fstream dim(c_str, std::ios_base::in);
+
+    dim >> largura >> altura;
+
+    if(!this->carregarImg(12, caminho))
+    {
+        spl->finish(this);
+        this->setCaminho(NULL);
+        return false;
+    }
+
+    spl->finish(this);
+
+    return true;
+}
+
+bool ImgLoader::carregarImg(int nc, QString caminho)
 {
     this->caminho = caminho;
 
@@ -100,7 +147,17 @@ void ImgLoader::setCaminho(QString caminho)
     this->caminho = caminho;
 }
 
-short unsigned * ImgLoader::getMatrizOrig()
+unsigned short * ImgLoader::getMatrizOrig()
 {
     return st_image.vi_vector;
+}
+
+int ImgLoader::getLargura()
+{
+    return largura;
+}
+
+int ImgLoader::getAltura()
+{
+    return altura;
 }

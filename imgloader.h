@@ -2,12 +2,18 @@
 #define IMGLOADER_H
 
 #include <QWidget>
+#include <QDialog>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QLabel>
 #include <QString>
 #include <iostream>
 #include <string.h>
+#include <QSplashScreen>
+#include <fstream>
+#include <stdio.h>
+#include <math.h>
+#include <QTime>
 #include <QSplashScreen>
 #include "readimage.h"
 
@@ -22,10 +28,14 @@ public:
 // Metodos
     QString getCaminho();
     bool getStatus();
-    bool carregarImg(int largura, int altura, int nc, QString caminho);
+    bool carregaCaminho();
+    bool carregarImg(int nc, QString caminho);
     unsigned short *getMatrizOrig();
     QLabel * getImgPreview();
     void setCaminho(QString caminho);
+    int getAltura();
+    int getLargura();
+    int x, y;
 
 private:
 
@@ -35,6 +45,8 @@ private:
     QString caminho;
     QImage imgOrig;
     tImage st_image;
+    int largura;
+    int altura;
 
 public slots:
 

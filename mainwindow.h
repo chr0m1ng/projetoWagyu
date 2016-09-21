@@ -14,7 +14,6 @@
 #include <QTime>
 #include <QMovie>
 #include "guimatrizcoo.h"
-#include "guiimageloader.h"
 #include "guiresults.h"
 #include "imgloader.h"
 #include "haralick.h"
@@ -34,9 +33,6 @@ public:
 private:
     Ui::MainWindow *ui;
 
-    QMovie *gif;
-
-    GUIImageLoader *openFile = NULL;
     GUIResults *results = NULL;
     GUIMatrizCoo *matriz = NULL;
     ImgLoader *loader;
