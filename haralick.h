@@ -22,22 +22,24 @@ public:
     }
     ~Haralick();
 
-    double * getMc0();
-    double * getMc45();
-    double * getMc90();
-    double * getMc135();
+    int * getMc0();
+    int * getMc45();
+    int * getMc90();
+    int * getMc135();
+    int * getMatTot();
 
 
 private:
+    int * __restrict__ matrizCoF;
     int Ng;
     int altura, largura;
     int distancia;
     int ntrds;
     unsigned short * matrizImg;
-    double * matrizCo0;
-    double * matrizCo45;
-    double * matrizCo90;
-    double * matrizCo135;
+    int * matrizCo0;
+    int * matrizCo45;
+    int * matrizCo90;
+    int * matrizCo135;
 
     double mediaH(const double * __restrict__ p, int tam);
 

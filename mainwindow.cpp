@@ -257,7 +257,7 @@ void MainWindow::createNT()
 
 void MainWindow::slotMatrizesCoOc()
 {
-    matriz->exibeResults(this->matrizCoN_CPU, pow(2, 12), "Matriz Total");
+    matriz->exibeResults(ath->getMatTot(), pow(2, 12), "Matriz Total");
 }
 
 void MainWindow::slotMatrizesCoOc0()

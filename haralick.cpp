@@ -13,11 +13,11 @@ void Haralick::calcularMatrizCoN(double * __restrict__ matrizCoN, int distancia)
 
     const int N = this->Ng;
 
-    int * __restrict__ matrizCoF = new int[N*N];
-    matrizCo0 = new double[N * N];
-    matrizCo45 = new double[N * N];
-    matrizCo90 = new double[N * N];
-    matrizCo135 = new double[N * N];
+    matrizCoF = new int[N * N];
+    matrizCo0 = new int[N * N];
+    matrizCo45 = new int[N * N];
+    matrizCo90 = new int[N * N];
+    matrizCo135 = new int[N * N];
 
 
     this->distancia = distancia;
@@ -82,7 +82,6 @@ void Haralick::calcularMatrizCoN(double * __restrict__ matrizCoN, int distancia)
     for(int i = 0; i < TAM_TOTAL; ++i)
         matrizCoN[i] = (1.0 * matrizCoF[i]) / soma;
 
-    delete [] matrizCoF;
 }
 
 double Haralick::mediaH(const double * __restrict__ p, int tam)
@@ -169,64 +168,29 @@ inline void Haralick::mc135_(unsigned short * __restrict__ mIMG, int i, int j, i
     }
 }
 
-double * Haralick::getMc0()
+int * Haralick::getMc0()
 {
-    int TAM_TOTAL = this->Ng * this->Ng;
-    double soma = 0.0;
-    #pragma omp parallel for simd reduction(+:soma)
-    for(int i = 0; i < TAM_TOTAL; ++i)
-        soma += matrizCo0[i];
-
-    #pragma omp parallel for simd
-    for(int i = 0; i < TAM_TOTAL; ++i)
-        matrizCo0[i] = (1.0 * matrizCo0[i]) / soma;
-
     return matrizCo0;
 }
 
-double * Haralick::getMc45()
+int * Haralick::getMc45()
 {
-    int TAM_TOTAL = this->Ng * this->Ng;
-    double soma = 0.0;
-    #pragma omp parallel for simd reduction(+:soma)
-    for(int i = 0; i < TAM_TOTAL; ++i)
-        soma += matrizCo45[i];
-
-    #pragma omp parallel for simd
-    for(int i = 0; i < TAM_TOTAL; ++i)
-        matrizCo45[i] = (1.0 * matrizCo45[i]) / soma;
-
     return matrizCo45;
 }
 
-double * Haralick::getMc90()
+int * Haralick::getMc90()
 {
-    int TAM_TOTAL = this->Ng * this->Ng;
-    double soma = 0.0;
-    #pragma omp parallel for simd reduction(+:soma)
-    for(int i = 0; i < TAM_TOTAL; ++i)
-        soma += matrizCo90[i];
-
-    #pragma omp parallel for simd
-    for(int i = 0; i < TAM_TOTAL; ++i)
-        matrizCo90[i] = (1.0 * matrizCo90[i]) / soma;
-
     return matrizCo90;
 }
 
-double * Haralick::getMc135()
+int * Haralick::getMc135()
 {
-    int TAM_TOTAL = this->Ng * this->Ng;
-    double soma = 0.0;
-    #pragma omp parallel for simd reduction(+:soma)
-    for(int i = 0; i < TAM_TOTAL; ++i)
-        soma += matrizCo135[i];
-
-    #pragma omp parallel for simd
-    for(int i = 0; i < TAM_TOTAL; ++i)
-        matrizCo135[i] = (1.0 * matrizCo135[i]) / soma;
-
     return matrizCo135;
+}
+
+int * Haralick::getMatTot()
+{
+    return matrizCoF;
 }
 
 

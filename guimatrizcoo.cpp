@@ -48,7 +48,7 @@ QPushButton * GUIMatrizCoo::getBt(int i)
     return btMatriz[i];
 }
 
-void GUIMatrizCoo::exibeResults(double *matrizCoOc, int N, QString mat)
+void GUIMatrizCoo::exibeResults(int *matrizCoOc, int N, QString mat)
 {
     this->hide();
     this->matrizCoOc = matrizCoOc;
@@ -58,16 +58,20 @@ void GUIMatrizCoo::exibeResults(double *matrizCoOc, int N, QString mat)
     QDesktopWidget t;
     QRect screenSize = t.availableGeometry(t.primaryScreen());
     QWidget* wgMat = new QWidget;
-    txtMat = new QPlainTextEdit(wgMat);
-
-    wgMat->resize(screenSize.width(), screenSize.height());
-    txtMat->resize(screenSize.width(), screenSize.height() - 100);
-    txtMat->setReadOnly(true);
     wgMat->setWindowTitle(mat);
+
     QPushButton* btSalvar = new QPushButton("Salvar", wgMat);
     QPushButton* btFechar = new QPushButton("Fechar", wgMat);
-    btFechar->setGeometry(screenSize.width() - 150, screenSize.height() - 95, 100, 40);
-    btSalvar->setGeometry(screenSize.width() - 280, screenSize.height() - 95, 100, 40);
+
+    wgMat->resize(380, 405);
+    wgMat->move(screenSize.width()/2 - wgMat->size().width()/2, screenSize.height()/2 - wgMat->size().height()/2);
+
+    btSalvar->move(wgMat->size().width() / 2 - btSalvar->size().width() - 40, wgMat->size().height() - btSalvar->size().height() - 5);
+    btFechar->move(wgMat->size().width() / 2 + 40, wgMat->size().height() - btFechar->size().height() - 5);
+    btSalvar->resize(wgMat->size().width()/4, 40);
+    btFechar->resize(wgMat->size().width()/4, 40);
+    wgMat->setMinimumSize(wgMat->size());
+    wgMat->setMaximumSize(wgMat->size());
 
     QPixmap pix("../projetoWagyu/Extras/gifinho.gif");
     if(pix.isNull())
@@ -87,16 +91,287 @@ void GUIMatrizCoo::exibeResults(double *matrizCoOc, int N, QString mat)
     while(QTime::currentTime() < dieTime)
         QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 
-    for(int i = 0; i < 4; i++)
+    if(mat == "Matriz Total")
     {
-        for(int j = 0; j < 4; j++)
-        {
-            QString tmp = QString::number(matrizCoOc[i]) + " ";
-            txtMat->insertPlainText(tmp);
 
+        //Salva vetor extraido da imagem .raw em um .txt como se fosse um .pgm
+        FILE *cam = fopen("matTot.txt", "w");
+        if(cam == NULL)
+        {
+            QMessageBox::information(this, tr("Image Viewer"),tr("Nao foi possivel carregar arquivo"));
         }
-        txtMat->appendPlainText("");
+        fprintf(cam, "P2\n%d %d\n%d\n", N, N, 255);
+        int tam = N * N;
+        for(int i = 0; i < tam; i++)
+            fprintf(cam, "%d\n", matrizCoOc[i]);
+        fclose(cam);
+        QFile::rename("matTot.txt", "matTot.pgm");
+
+        QImage img("matTot.pgm", "PGM");
+        this->matTot = img.copy();
+        this->matAtual = &this->matTot;
+
+        QLabel *imgPreview = new QLabel;
+        imgPreview->setBackgroundRole(QPalette::Base);
+        imgPreview->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+        imgPreview->setScaledContents(true);
+
+        QFrame *framePreview = new QFrame(wgMat);
+        framePreview->setEnabled(true);
+        framePreview->setGeometry(20,20,331,331);
+        framePreview->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        framePreview->setLineWidth(1);
+        framePreview->setFrameShadow(QFrame::Raised);
+        framePreview->setFrameShape(QFrame::StyledPanel);
+        framePreview->setVisible(true);
+
+        QLabel *labelPreview = new QLabel(framePreview);
+        labelPreview->setText("PREVIEW");
+        labelPreview->setGeometry(140,0,71,16);
+        labelPreview->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        labelPreview->setVisible(true);
+
+        QScrollArea *areaPreview = new QScrollArea(framePreview);
+        areaPreview->setGeometry(10,20,311,301);
+        areaPreview->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        areaPreview->setFrameShadow(QFrame::Sunken);
+        areaPreview->setFrameShape(QFrame::StyledPanel);
+        areaPreview->setWidgetResizable(true);
+
+        imgPreview->setPixmap(QPixmap::fromImage(img));
+        imgPreview->adjustSize();
+
+        areaPreview->setWidget(imgPreview);
+
+        QFile::remove("matTot.pgm");
+
     }
+
+    else if(mat == "Matriz 0º")
+    {
+
+        //Salva vetor extraido da imagem .raw em um .txt como se fosse um .pgm
+        FILE *cam = fopen("mat0.txt", "w");
+        if(cam == NULL)
+        {
+            QMessageBox::information(this, tr("Image Viewer"),tr("Nao foi possivel carregar arquivo"));
+        }
+        fprintf(cam, "P2\n%d %d\n%d\n", N, N, 255);
+        int tam = N * N;
+        for(int i = 0; i < tam; i++)
+            fprintf(cam, "%d\n", matrizCoOc[i]);
+        fclose(cam);
+        QFile::rename("mat0.txt", "mat0.pgm");
+
+        QImage img("mat0.pgm", "PGM");
+        this->mat0 = img.copy();
+        this->matAtual = &this->mat0;
+
+        QLabel *imgPreview = new QLabel;
+        imgPreview->setBackgroundRole(QPalette::Base);
+        imgPreview->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+        imgPreview->setScaledContents(true);
+
+        QFrame *framePreview = new QFrame(wgMat);
+        framePreview->setEnabled(true);
+        framePreview->setGeometry(20,20,331,331);
+        framePreview->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        framePreview->setLineWidth(1);
+        framePreview->setFrameShadow(QFrame::Raised);
+        framePreview->setFrameShape(QFrame::StyledPanel);
+        framePreview->setVisible(true);
+
+        QLabel *labelPreview = new QLabel(framePreview);
+        labelPreview->setText("PREVIEW");
+        labelPreview->setGeometry(140,0,71,16);
+        labelPreview->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        labelPreview->setVisible(true);
+
+        QScrollArea *areaPreview = new QScrollArea(framePreview);
+        areaPreview->setGeometry(10,20,311,301);
+        areaPreview->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        areaPreview->setFrameShadow(QFrame::Sunken);
+        areaPreview->setFrameShape(QFrame::StyledPanel);
+        areaPreview->setWidgetResizable(true);
+
+        imgPreview->setPixmap(QPixmap::fromImage(img));
+        imgPreview->adjustSize();
+
+        areaPreview->setWidget(imgPreview);
+
+        QFile::remove("mat0.pgm");
+
+    }
+
+    else if(mat == "Matriz 45º")
+    {
+
+        //Salva vetor extraido da imagem .raw em um .txt como se fosse um .pgm
+        FILE *cam = fopen("mat45.txt", "w");
+        if(cam == NULL)
+        {
+            QMessageBox::information(this, tr("Image Viewer"),tr("Nao foi possivel carregar arquivo"));
+        }
+        fprintf(cam, "P2\n%d %d\n%d\n", N, N, 255);
+        int tam = N * N;
+        for(int i = 0; i < tam; i++)
+            fprintf(cam, "%d\n", matrizCoOc[i]);
+        fclose(cam);
+        QFile::rename("mat45.txt", "mat45.pgm");
+
+        QImage img("mat45.pgm", "PGM");
+        this->mat45 = img.copy();
+        this->matAtual = &this->mat45;
+
+
+        QLabel *imgPreview = new QLabel;
+        imgPreview->setBackgroundRole(QPalette::Base);
+        imgPreview->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+        imgPreview->setScaledContents(true);
+
+        QFrame *framePreview = new QFrame(wgMat);
+        framePreview->setEnabled(true);
+        framePreview->setGeometry(20,20,331,331);
+        framePreview->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        framePreview->setLineWidth(1);
+        framePreview->setFrameShadow(QFrame::Raised);
+        framePreview->setFrameShape(QFrame::StyledPanel);
+        framePreview->setVisible(true);
+
+        QLabel *labelPreview = new QLabel(framePreview);
+        labelPreview->setText("PREVIEW");
+        labelPreview->setGeometry(140,0,71,16);
+        labelPreview->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        labelPreview->setVisible(true);
+
+        QScrollArea *areaPreview = new QScrollArea(framePreview);
+        areaPreview->setGeometry(10,20,311,301);
+        areaPreview->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        areaPreview->setFrameShadow(QFrame::Sunken);
+        areaPreview->setFrameShape(QFrame::StyledPanel);
+        areaPreview->setWidgetResizable(true);
+
+        imgPreview->setPixmap(QPixmap::fromImage(img));
+        imgPreview->adjustSize();
+
+        areaPreview->setWidget(imgPreview);
+
+        QFile::remove("mat45.pgm");
+
+    }
+
+    else if(mat == "Matriz 90º")
+    {
+
+        //Salva vetor extraido da imagem .raw em um .txt como se fosse um .pgm
+        FILE *cam = fopen("mat90.txt", "w");
+        if(cam == NULL)
+        {
+            QMessageBox::information(this, tr("Image Viewer"),tr("Nao foi possivel carregar arquivo"));
+        }
+        fprintf(cam, "P2\n%d %d\n%d\n", N, N, 255);
+        int tam = N * N;
+        for(int i = 0; i < tam; i++)
+            fprintf(cam, "%d\n", matrizCoOc[i]);
+        fclose(cam);
+        QFile::rename("mat90.txt", "mat90.pgm");
+
+        QImage img("mat90.pgm", "PGM");
+        this->mat90 = img.copy();
+        this->matAtual = &this->mat90;
+
+        QLabel *imgPreview = new QLabel;
+        imgPreview->setBackgroundRole(QPalette::Base);
+        imgPreview->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+        imgPreview->setScaledContents(true);
+
+        QFrame *framePreview = new QFrame(wgMat);
+        framePreview->setEnabled(true);
+        framePreview->setGeometry(20,20,331,331);
+        framePreview->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        framePreview->setLineWidth(1);
+        framePreview->setFrameShadow(QFrame::Raised);
+        framePreview->setFrameShape(QFrame::StyledPanel);
+        framePreview->setVisible(true);
+
+        QLabel *labelPreview = new QLabel(framePreview);
+        labelPreview->setText("PREVIEW");
+        labelPreview->setGeometry(140,0,71,16);
+        labelPreview->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        labelPreview->setVisible(true);
+
+        QScrollArea *areaPreview = new QScrollArea(framePreview);
+        areaPreview->setGeometry(10,20,311,301);
+        areaPreview->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        areaPreview->setFrameShadow(QFrame::Sunken);
+        areaPreview->setFrameShape(QFrame::StyledPanel);
+        areaPreview->setWidgetResizable(true);
+
+        imgPreview->setPixmap(QPixmap::fromImage(img));
+        imgPreview->adjustSize();
+
+        areaPreview->setWidget(imgPreview);
+
+        QFile::remove("mat90.pgm");
+
+    }
+
+    else if(mat == "Matriz 135º")
+    {
+
+        //Salva vetor extraido da imagem .raw em um .txt como se fosse um .pgm
+        FILE *cam = fopen("mat135.txt", "w");
+        if(cam == NULL)
+        {
+            QMessageBox::information(this, tr("Image Viewer"),tr("Nao foi possivel carregar arquivo"));
+        }
+        fprintf(cam, "P2\n%d %d\n%d\n", N, N, 255);
+        int tam = N * N;
+        for(int i = 0; i < tam; i++)
+            fprintf(cam, "%d\n", matrizCoOc[i]);
+        fclose(cam);
+        QFile::rename("mat135.txt", "mat135.pgm");
+
+        QImage img("mat135.pgm", "PGM");
+        this->mat135 = img.copy();
+        this->matAtual = &this->mat135;
+
+        QLabel *imgPreview = new QLabel;
+        imgPreview->setBackgroundRole(QPalette::Base);
+        imgPreview->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+        imgPreview->setScaledContents(true);
+
+        QFrame *framePreview = new QFrame(wgMat);
+        framePreview->setEnabled(true);
+        framePreview->setGeometry(20,20,331,331);
+        framePreview->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        framePreview->setLineWidth(1);
+        framePreview->setFrameShadow(QFrame::Raised);
+        framePreview->setFrameShape(QFrame::StyledPanel);
+        framePreview->setVisible(true);
+
+        QLabel *labelPreview = new QLabel(framePreview);
+        labelPreview->setText("PREVIEW");
+        labelPreview->setGeometry(140,0,71,16);
+        labelPreview->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        labelPreview->setVisible(true);
+
+        QScrollArea *areaPreview = new QScrollArea(framePreview);
+        areaPreview->setGeometry(10,20,311,301);
+        areaPreview->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        areaPreview->setFrameShadow(QFrame::Sunken);
+        areaPreview->setFrameShape(QFrame::StyledPanel);
+        areaPreview->setWidgetResizable(true);
+
+        imgPreview->setPixmap(QPixmap::fromImage(img));
+        imgPreview->adjustSize();
+
+        areaPreview->setWidget(imgPreview);
+
+        QFile::remove("mat135.pgm");
+
+    }
+
     spl->finish(this);
     connect(btSalvar, SIGNAL(released()), this, SLOT(slotSalvarArquivo()));
     connect(btFechar, SIGNAL(released()), wgMat, SLOT(close()));
@@ -107,24 +382,6 @@ void GUIMatrizCoo::exibeResults(double *matrizCoOc, int N, QString mat)
 void GUIMatrizCoo::slotSalvarArquivo()
 {
     QString caminho = QFileDialog::getSaveFileName(this, "Salvar Arquivo", QDir::currentPath());
-
     if(!caminho.isEmpty())
-    {
-        caminho.append(".txt");
-        QFile file(caminho);
-        if(file.open(QIODevice::ReadWrite))
-        {
-            QTextStream stream(&file);
-            stream << mat + "\n\n";
-            stream << txtMat->toPlainText();
-            file.flush();
-            file.close();
-            QMessageBox::information(this, tr("Salvo"),tr("Salvo com sucesso em %1.").arg(caminho));
-        }
-        else
-        {
-            QMessageBox::critical(this, tr("Error"), tr("Impossivel salvar arquivo"));
-            return;
-        }
-    }
+        matAtual->save(caminho, "png");
 }

@@ -13,7 +13,7 @@
 #include <QTextStream>
 #include <QTime>
 #include <QSplashScreen>
-
+#include <QScrollArea>
 
 
 namespace Ui {
@@ -28,16 +28,22 @@ public:
     explicit GUIMatrizCoo(QWidget *parent = 0);
     ~GUIMatrizCoo();
     QPushButton * getBt(int i);
-    void exibeResults(double *matrizCoOc, int N, QString mat);
+    void exibeResults(int *matrizCoOc, int N, QString mat);
 
 private:
     Ui::GUIMatrizCoo *ui;
     QPushButton **btMatriz;
     void createButtons();
-    double *matrizCoOc;
+    int *matrizCoOc;
     int N;
     QPlainTextEdit* txtMat;
     QString mat;
+    QImage mat0;
+    QImage mat45;
+    QImage mat90;
+    QImage mat135;
+    QImage matTot;
+    QImage *matAtual;
 private slots:
     void slotSalvarArquivo();
 };

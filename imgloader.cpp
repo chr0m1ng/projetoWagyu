@@ -32,7 +32,7 @@ bool ImgLoader::carregaCaminho()
     spl->setGeometry(x, y, pix.width(), pix.height());
 
 
-    QString caminho = QFileDialog::getOpenFileName(this, tr("Carregar Arquivo"), QDir::currentPath());
+    QString caminho = QFileDialog::getOpenFileName(this, tr("Carregar Arquivo"), QDir::currentPath(), tr("Images (*.1 *.raw)"));
     spl->show();
     spl->raise();
     spl->activateWindow();
@@ -91,6 +91,7 @@ bool ImgLoader::carregarImg(int nc, QString caminho)
             return false;
         }
         fprintf(imgRAW, "P2\n%d %d\n%d\n", altura, largura, (int)pow(2, nc) - 1);
+
         for(int i = 0; i < largura; i++)
             for(int j = 0; j < altura; j++)
                 fprintf(imgRAW, "%d\n", (int) st_image.vi_vector[i * altura + j]);
