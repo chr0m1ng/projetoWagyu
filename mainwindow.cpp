@@ -152,6 +152,7 @@ void MainWindow::createPreview()
     areaPreview->setFrameShadow(QFrame::Sunken);
     areaPreview->setFrameShape(QFrame::StyledPanel);
     areaPreview->setWidgetResizable(true);
+    areaPreview->hide();
 
 }
 
@@ -280,63 +281,107 @@ void MainWindow::slotMatrizesCoOc135()
     matriz->exibeResults(ath->getMc135(), pow(2, 12), "Matriz 135º");
 }
 
+void MainWindow::carregaCaminho()
+{
+    QString dir = QFileDialog::getExistingDirectory(this, tr("Selecionar Pasta"), QDir::currentPath(), QFileDialog::ShowDirsOnly);
+
+    QDirIterator itDir(dir, QDirIterator::Subdirectories);
+
+    while(itDir.hasNext())
+    {
+        QString cam = itDir.next();
+
+        int pos1 = cam.lastIndexOf(".");
+        QString fim = cam;
+        fim = fim.remove(0, pos1);
+        if(fim == ".1")
+            caminhoImg.append(cam);
+    }
+
+    for(int i = 0; i < caminhoImg.size(); i++)
+        std::cout << caminhoImg.at(i).toStdString() << std::endl;
+}
+
 void MainWindow::slotOpen()
 {
-    if(loader == NULL)
-        loader = new ImgLoader();
     int x = this->geometry().x() + this->centralWidget()->geometry().x() + 30;
     int y = this->geometry().y() + this->centralWidget()->geometry().y() + 40;
 
-    loader->setXY(x, y);
+    this->carregaCaminho();
 
-    loader->carregaCaminho();
+    QLabel *lbImg = new QLabel[caminhoImg.size()]();
 
-    if(loader->getCaminho()!= NULL)
+    int xx = 10;
+    int yy = 40;
+
+    if(loader == NULL)
+        loader = new ImgLoader[caminhoImg.size()]();
+
+    for(int i = 0; i < caminhoImg.size(); i++)
     {
-        areaPreview->setWidget(loader->getImgPreview());
-        ui->extrairPb->setEnabled(true);
-        frameATH->setEnabled(true);
-        frameDMCO->setEnabled(true);
-        frameNT->setEnabled(true);
+        QString nome = caminhoImg.at(i);
 
-        QPixmap pix("../projetoWagyu/Extras/gifinho.gif");
-        if(pix.isNull())
+        int pos = nome.lastIndexOf("/");
+
+        nome = nome.remove(0, pos + 1);
+
+        loader[i].setXY(x, y);
+        loader[i].carregaCaminho(caminhoImg.at(i));
+
+        lbImg[i].setParent(framePreview);
+        lbImg[i].setText(nome);
+        lbImg[i].show();
+        lbImg[i].move(xx, yy);
+
+        yy += 20;
+
+        if(loader[i].getCaminho()!= NULL)
         {
-            pix = QPixmap(311, 301);
-            QColor color(189,237,2,255);
-            pix.fill(color);
+            areaPreview->setWidget(loader[i].getImgPreview());
+            ui->extrairPb->setEnabled(true);
+            frameATH->setEnabled(true);
+            frameDMCO->setEnabled(true);
+            frameNT->setEnabled(true);
+
+            QPixmap pix("../projetoWagyu/Extras/gifinho.gif");
+            if(pix.isNull())
+            {
+                pix = QPixmap(311, 301);
+                QColor color(189,237,2,255);
+                pix.fill(color);
+            }
+
+            QSplashScreen *spl = new QSplashScreen(pix);
+            spl->showMessage("Calculando...", Qt::AlignCenter, Qt::black);
+            spl->setGeometry(x, y, pix.width(), pix.height());
+            qApp->processEvents(QEventLoop::AllEvents);
+
+            spl->show();
+            spl->raise();
+            spl->activateWindow();
+
+            QTime dieTime = QTime::currentTime().addMSecs(1000);
+            while(QTime::currentTime() < dieTime)
+                QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+
+            for(int j = 1; j < 14; j++)
+            {
+                atributosSelecionados[j] = -2;
+                boxCheckeds[j] = false;
+                caixasDeSelecao[j]->setChecked(false);
+                caixaDMCO->setValue(1);
+                caixaNT->setValue(4);
+            }
+
+
+            int NG = pow(2, 12);
+            matrizCoN_CPU = new double[NG * NG];
+            ath = new Haralick(loader[i].getMatrizOrig(), loader[i].getLargura(), loader[i].getAltura(), NG, caixaNT->value());
+            ath->calcularMatrizCoN(matrizCoN_CPU, caixaDMCO->value());
+            ath->atCpu(matrizCoN_CPU, NG);
+            matrizAct->setEnabled(true);
+            spl->finish(this);
         }
-
-        QSplashScreen *spl = new QSplashScreen(pix);
-        spl->showMessage("Calculando...", Qt::AlignCenter, Qt::black);
-        spl->setGeometry(x, y, pix.width(), pix.height());
-        qApp->processEvents(QEventLoop::AllEvents);
-
-        spl->show();
-        spl->raise();
-        spl->activateWindow();
-
-        QTime dieTime = QTime::currentTime().addMSecs(1000);
-        while(QTime::currentTime() < dieTime)
-            QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
-
-        for(int i = 1; i < 14; i++)
-        {
-            atributosSelecionados[i] = -2;
-            boxCheckeds[i] = false;
-            caixasDeSelecao[i]->setChecked(false);
-            caixaDMCO->setValue(1);
-            caixaNT->setValue(4);
-        }
-
-
-        int NG = pow(2, 12);
-        matrizCoN_CPU = new double[NG * NG];
-        ath = new Haralick(loader->getMatrizOrig(), loader->getLargura(), loader->getAltura(), NG, caixaNT->value());
-        ath->calcularMatrizCoN(matrizCoN_CPU, caixaDMCO->value());
-        ath->atCpu(matrizCoN_CPU, NG);
-        matrizAct->setEnabled(true);
-        spl->finish(this);
     }
 }
 

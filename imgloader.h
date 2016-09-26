@@ -15,7 +15,6 @@
 #include <math.h>
 #include <QTime>
 #include <QSplashScreen>
-#include <QDirIterator>
 #include "readimage.h"
 
 class ImgLoader : public QWidget
@@ -29,13 +28,14 @@ public:
 // Metodos
     QString getCaminho();
     bool getStatus();
-    bool carregaCaminho();
+    bool carregaCaminho(QString caminho);
     bool carregarImg(int nc, QString caminho);
     unsigned short *getMatrizOrig();
     QLabel * getImgPreview();
     void setCaminho(QString caminho);
     int getAltura();
     int getLargura();
+    bool showImage();
 
     void setXY(int x, int y);
 

@@ -12,7 +12,7 @@
 #include <QMenu>
 #include <cmath>
 #include <QTime>
-#include <QMovie>
+#include <QDirIterator>
 #include "guimatrizcoo.h"
 #include "guiresults.h"
 #include "imgloader.h"
@@ -38,6 +38,9 @@ private:
     ImgLoader *loader = NULL;
     double * matrizCoN_CPU;
     double * atributosSelecionados;
+    QVector<QString> caminhoImg;
+
+    void carregaCaminho();
 
     bool * boxCheckeds;
 

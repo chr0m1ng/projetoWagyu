@@ -17,7 +17,7 @@ ImgLoader::~ImgLoader()
     delete imgPreview;
 }
 
-bool ImgLoader::carregaCaminho()
+bool ImgLoader::carregaCaminho(QString caminho)
 {
     QPixmap pix("../projetoWagyu/Extras/gifinho.gif");
     if(pix.isNull())
@@ -32,29 +32,6 @@ bool ImgLoader::carregaCaminho()
     spl->showMessage("Abrindo...", Qt::AlignCenter, Qt::black);
     spl->setGeometry(x, y, pix.width(), pix.height());
 
-
-    QString dir = QFileDialog::getExistingDirectory(this, tr("Selecionar Pasta"), QDir::currentPath(), QFileDialog::ShowDirsOnly);
-
-    QDirIterator itDir(dir, QDirIterator::Subdirectories);
-
-    while(itDir.hasNext())
-    {
-        QString cam = itDir.next();
-
-        int pos1 = cam.lastIndexOf(".");
-        QString fim = cam;
-        fim = fim.remove(0, pos1);
-        if(fim == ".1")
-        {
-            QByteArray ba2 = cam.toLatin1();
-            const char *c_str2 = ba2.data();
-
-            std::cout << c_str2 << std::endl;
-        }
-
-    }
-
-    QString caminho = QFileDialog::getOpenFileName(this, tr("Carregar Arquivo"), QDir::currentPath(), tr("Images (*.1)"));
     spl->show();
     spl->raise();
     spl->activateWindow();
@@ -109,6 +86,20 @@ bool ImgLoader::carregarImg(int nc, QString caminho)
         st_image = rImage.vectorImage();
         st_image.vi_bits = nc;
 
+       return true;
+    }
+
+    else
+    {
+        QMessageBox::information(this, tr("Image Viewer"),tr("Nao foi possivel carregar caminho %1.").arg(caminho));
+        return false;
+    }
+}
+
+bool ImgLoader::showImage()
+{
+    if(!caminho.isEmpty())
+    {
         //Salva vetor extraido da imagem .raw em um .txt como se fosse um .pgm
         FILE *imgRAW = fopen("imgRAW.txt", "w");
         if(imgRAW == NULL)
@@ -116,7 +107,7 @@ bool ImgLoader::carregarImg(int nc, QString caminho)
             QMessageBox::information(this, tr("Image Viewer"),tr("Nao foi possivel carregar file %1.").arg(caminho));
             return false;
         }
-        fprintf(imgRAW, "P2\n%d %d\n%d\n", altura, largura, (int)pow(2, nc) - 1);
+        fprintf(imgRAW, "P2\n%d %d\n%d\n", altura, largura, (int)pow(2, st_image.vi_bits) - 1);
 
         for(int i = 0; i < largura; i++)
             for(int j = 0; j < altura; j++)
@@ -136,6 +127,7 @@ bool ImgLoader::carregarImg(int nc, QString caminho)
 
         imgPreview -> setPixmap(QPixmap::fromImage(imagem));
         imgPreview -> adjustSize();
+        int pos = caminho.lastIndexOf("/");
         QString imgNome = caminho.remove(0, pos + 3);
 
         imgPreview->setToolTip(imgNome);
@@ -146,12 +138,7 @@ bool ImgLoader::carregarImg(int nc, QString caminho)
 
         return true;
     }
-
-    else
-    {
-        QMessageBox::information(this, tr("Image Viewer"),tr("Nao foi possivel carregar caminho %1.").arg(caminho));
-        return false;
-    }
+    return false;
 }
 
 QLabel * ImgLoader::getImgPreview()
