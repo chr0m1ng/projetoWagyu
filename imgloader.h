@@ -35,7 +35,8 @@ public:
     void setCaminho(QString caminho);
     int getAltura();
     int getLargura();
-    int x, y;
+
+    void setXY(int x, int y);
 
 private:
 
@@ -47,6 +48,7 @@ private:
     tImage st_image;
     int largura;
     int altura;
+    int x, y;
 
 public slots:
 

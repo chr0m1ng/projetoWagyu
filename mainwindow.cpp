@@ -286,8 +286,8 @@ void MainWindow::slotOpen()
         loader = new ImgLoader();
     int x = this->geometry().x() + this->centralWidget()->geometry().x() + 30;
     int y = this->geometry().y() + this->centralWidget()->geometry().y() + 40;
-    loader->x = x;
-    loader->y = y;
+
+    loader->setXY(x, y);
 
     loader->carregaCaminho();
 

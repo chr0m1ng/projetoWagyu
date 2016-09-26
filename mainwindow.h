@@ -35,7 +35,7 @@ private:
 
     GUIResults *results = NULL;
     GUIMatrizCoo *matriz = NULL;
-    ImgLoader *loader;
+    ImgLoader *loader = NULL;
     double * matrizCoN_CPU;
     double * atributosSelecionados;
 

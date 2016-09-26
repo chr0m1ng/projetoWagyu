@@ -27,12 +27,13 @@ bool ImgLoader::carregaCaminho()
         pix.fill(color);
     }
 
+
     QSplashScreen *spl = new QSplashScreen(pix);
     spl->showMessage("Abrindo...", Qt::AlignCenter, Qt::black);
     spl->setGeometry(x, y, pix.width(), pix.height());
 
 
-    QString caminho = QFileDialog::getOpenFileName(this, tr("Carregar Arquivo"), QDir::currentPath(), tr("Images (*.1 *.raw)"));
+    QString caminho = QFileDialog::getOpenFileName(this, tr("Carregar Arquivo"), QDir::currentPath(), tr("Images (*.1)"));
     spl->show();
     spl->raise();
     spl->activateWindow();
@@ -161,4 +162,10 @@ int ImgLoader::getLargura()
 int ImgLoader::getAltura()
 {
     return altura;
+}
+
+void ImgLoader::setXY(int x, int y)
+{
+    this->x = x;
+    this->y = y;
 }
