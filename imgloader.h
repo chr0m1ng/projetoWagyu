@@ -15,6 +15,7 @@
 #include <math.h>
 #include <QTime>
 #include <QSplashScreen>
+#include <QDirIterator>
 #include "readimage.h"
 
 class ImgLoader : public QWidget

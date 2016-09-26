@@ -33,10 +33,33 @@ bool ImgLoader::carregaCaminho()
     spl->setGeometry(x, y, pix.width(), pix.height());
 
 
+    QString dir = QFileDialog::getExistingDirectory(this, tr("Selecionar Pasta"), QDir::currentPath(), QFileDialog::ShowDirsOnly);
+
+    QDirIterator itDir(dir, QDirIterator::Subdirectories);
+
+    while(itDir.hasNext())
+    {
+        QString cam = itDir.next();
+
+        int pos1 = cam.lastIndexOf(".");
+        QString fim = cam;
+        fim = fim.remove(0, pos1);
+        if(fim == ".1")
+        {
+            QByteArray ba2 = cam.toLatin1();
+            const char *c_str2 = ba2.data();
+
+            std::cout << c_str2 << std::endl;
+        }
+
+    }
+
     QString caminho = QFileDialog::getOpenFileName(this, tr("Carregar Arquivo"), QDir::currentPath(), tr("Images (*.1)"));
     spl->show();
     spl->raise();
     spl->activateWindow();
+
+
 
     QTime dieTime = QTime::currentTime().addMSecs(1000);
     while(QTime::currentTime() < dieTime)
@@ -78,6 +101,8 @@ bool ImgLoader::carregarImg(int nc, QString caminho)
         //Conversão de QString para const char *
         QByteArray ba = caminho.toLatin1();
         const char *c_str = ba.data();
+
+        std::cout << c_str << std::endl;
 
         ReadImage rImage(c_str, largura, altura);
 
