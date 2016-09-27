@@ -13,6 +13,7 @@
 #include <cmath>
 #include <QTime>
 #include <QDirIterator>
+#include <QSignalMapper>
 #include "guimatrizcoo.h"
 #include "guiresults.h"
 #include "imgloader.h"
@@ -45,38 +46,38 @@ private:
     bool * boxCheckeds;
 
     // GUI
-        // MenuBar
-        void createActions();
-        void createMenu();
-        QMenu *fileMenu;
-        QMenu *resultsMenu;
-        QAction *openAct;
-        QAction *resultAct;
-        QAction *matrizAct;
-        Haralick *ath;
+    // MenuBar
+    void createActions();
+    void createMenu();
+    QMenu *fileMenu;
+    QMenu *resultsMenu;
+    QAction *openAct;
+    QAction *resultAct;
+    QAction *matrizAct;
+    Haralick *ath;
 
-        // GuiPrincipal
-        void createConnections();
-        void createGUI();
-        void createPreview();
-        void createATH();
-        void createDMCO();
-        void createNT();
-        QFrame *framePreview;
-        QFrame *frameATH;
-        QFrame *frameDMCO;
-        QFrame *frameNT;
-        QLabel *labelPreview;
-        QLabel *labelATH;
-        QLabel *labelDMCO;
-        QLabel *labelNT;
-        QScrollArea *areaPreview;
-        QSpinBox *caixaDMCO;
-        QSpinBox *caixaNT;
-        //CheckBox
-        QString nomesATH[14];
-        QCheckBox **caixasDeSelecao;
-        void createBoxes();
+    // GuiPrincipal
+    void createConnections();
+    void createGUI();
+    void createPreview();
+    void createATH();
+    void createDMCO();
+    void createNT();
+    QFrame *framePreview;
+    QFrame *frameATH;
+    QFrame *frameDMCO;
+    QFrame *frameNT;
+    QLabel *labelPreview;
+    QLabel *labelATH;
+    QLabel *labelDMCO;
+    QLabel *labelNT;
+    QSpinBox *caixaDMCO;
+    QSpinBox *caixaNT;
+    QPushButton *lbImg;
+    //CheckBox
+    QString nomesATH[14];
+    QCheckBox **caixasDeSelecao;
+    void createBoxes();
 
 private slots:
     void slotOpen();
@@ -88,7 +89,7 @@ private slots:
     void slotMatrizesCoOc90();
     void slotMatrizesCoOc135();
     void slotMatrizesCoOc();
-
+    void slotPreview(const int &text);
     //Slots CheckBox
     void slotSelectAll();
     void slotATHs();

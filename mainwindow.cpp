@@ -49,12 +49,12 @@ MainWindow::~MainWindow()
     delete frameDMCO;
     delete labelATH;
     delete labelDMCO;
-    delete areaPreview;
     delete caixaDMCO;
     delete caixasDeSelecao;
     delete fileMenu;
     delete ath;
-    delete loader;
+    delete [] loader;
+    delete [] lbImg;
     delete openAct;
     delete resultAct;
     delete matrizAct;
@@ -145,14 +145,6 @@ void MainWindow::createPreview()
     labelPreview->setGeometry(140,0,71,16);
     labelPreview->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     labelPreview->setVisible(true);
-
-    areaPreview = new QScrollArea(framePreview);
-    areaPreview->setGeometry(10,20,311,301);
-    areaPreview->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    areaPreview->setFrameShadow(QFrame::Sunken);
-    areaPreview->setFrameShape(QFrame::StyledPanel);
-    areaPreview->setWidgetResizable(true);
-    areaPreview->hide();
 
 }
 
@@ -297,9 +289,6 @@ void MainWindow::carregaCaminho()
         if(fim == ".1")
             caminhoImg.append(cam);
     }
-
-    for(int i = 0; i < caminhoImg.size(); i++)
-        std::cout << caminhoImg.at(i).toStdString() << std::endl;
 }
 
 void MainWindow::slotOpen()
@@ -309,13 +298,14 @@ void MainWindow::slotOpen()
 
     this->carregaCaminho();
 
-    QLabel *lbImg = new QLabel[caminhoImg.size()]();
+    lbImg = new QPushButton[caminhoImg.size()]();
 
     int xx = 10;
     int yy = 40;
 
     if(loader == NULL)
         loader = new ImgLoader[caminhoImg.size()]();
+    QSignalMapper *signalMapper = new QSignalMapper(this);
 
     for(int i = 0; i < caminhoImg.size(); i++)
     {
@@ -332,12 +322,16 @@ void MainWindow::slotOpen()
         lbImg[i].setText(nome);
         lbImg[i].show();
         lbImg[i].move(xx, yy);
+        lbImg[i].setFlat(true);
+
+        connect(&this->lbImg[i], SIGNAL(clicked()), signalMapper, SLOT(map()));
+
+        signalMapper->setMapping(&this->lbImg[i], i);
 
         yy += 20;
 
         if(loader[i].getCaminho()!= NULL)
         {
-            areaPreview->setWidget(loader[i].getImgPreview());
             ui->extrairPb->setEnabled(true);
             frameATH->setEnabled(true);
             frameDMCO->setEnabled(true);
@@ -383,6 +377,13 @@ void MainWindow::slotOpen()
             spl->finish(this);
         }
     }
+
+    connect(signalMapper, SIGNAL(mapped(const int &)), this, SLOT(slotPreview(const int &)));
+}
+
+void MainWindow::slotPreview(const int &text)
+{
+    std::cout << text << std::endl;
 }
 
 void MainWindow::slotResult()
@@ -416,7 +417,7 @@ void MainWindow::slotExtracao()
 
         QSplashScreen *spl = new QSplashScreen(pix);
         spl->showMessage("Extraindo...", Qt::AlignCenter, Qt::black);
-        spl->setGeometry(this->geometry().x() + (this->centralWidget()->width()/2) - 150, this->geometry().y() + (this->centralWidget()->height()/2) - 150, 300, 300);
+        spl->move(this->geometry().x() + (this->centralWidget()->width()/2) - 150, this->geometry().y() + (this->centralWidget()->height()/2) - 150);
         qApp->processEvents(QEventLoop::AllEvents);
         spl->show();
         spl->raise();

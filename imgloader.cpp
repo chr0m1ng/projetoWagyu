@@ -79,8 +79,6 @@ bool ImgLoader::carregarImg(int nc, QString caminho)
         QByteArray ba = caminho.toLatin1();
         const char *c_str = ba.data();
 
-        std::cout << c_str << std::endl;
-
         ReadImage rImage(c_str, largura, altura);
 
         st_image = rImage.vectorImage();
