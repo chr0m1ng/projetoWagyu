@@ -12,7 +12,10 @@
 class Haralick
 {
 public:
-    Haralick(unsigned short * matrizImg, int altura, int largura, int nc, int ntrds)
+    Haralick();
+    ~Haralick();
+
+    void HaralickInit(unsigned short * matrizImg, int altura, int largura, int nc, int ntrds)
     {
         this->matrizImg = matrizImg;
         this->altura = altura;
@@ -20,16 +23,13 @@ public:
         this->Ng = nc;
         this->ntrds = ntrds;
     }
-    ~Haralick();
+
 
     int * getMc0();
     int * getMc45();
     int * getMc90();
     int * getMc135();
     int * getMatTot();
-
-    void setMatrizCon(double *matrizCoN);
-
 
 private:
     int * __restrict__ matrizCoF;
@@ -67,7 +67,7 @@ public:
             this->Ng = tam;
     }
 
-    void calcATH(double *&, bool *);
+    void calcATH(double *, bool *);
 
     double energia(); // f1
     double contraste(); // f2

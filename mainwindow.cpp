@@ -56,7 +56,6 @@ MainWindow::~MainWindow()
     delete ath;
     delete [] lbImg;
     delete openAct;
-    delete resultAct;
     delete matrizAct;
     delete [] boxCheckeds;
     delete ui;
@@ -100,11 +99,6 @@ void MainWindow::createActions()
     openAct->setStatusTip(tr("Carregar uma nova imagem"));
     connect(openAct, SIGNAL(triggered()), this, SLOT(slotOpen()));
 
-    resultAct = new QAction(tr("&Exibir"), this);
-    resultAct->setStatusTip(tr("Exibir resultados dos ATH calculados"));
-    resultAct->setEnabled(false);
-    connect(resultAct, SIGNAL(triggered()), this, SLOT(slotResult()));
-
     matrizAct = new QAction(tr("&Matriz"), this);
     matrizAct->setStatusTip(tr("Exibe as Matrizes de Co-ocorência"));
     matrizAct->setEnabled(false);
@@ -117,10 +111,6 @@ void MainWindow::createMenu()
 {
     fileMenu = menuBar()->addMenu(tr("&Arquivo"));
     fileMenu->addAction(openAct);
-
-    resultsMenu = menuBar()->addMenu(tr("&Resultados"));
-    resultsMenu->addAction(resultAct);
-    resultsMenu->addAction(matrizAct);
 }
 
 void MainWindow::createGUI()
@@ -310,6 +300,7 @@ void MainWindow::slotOpen()
         loader = new ImgLoader[caminhoImg.size()]();
         matrizCoN_CPU = new double * [caminhoImg.size()];
         atributosSelecionados = new double * [caminhoImg.size()];
+        ath = new Haralick [caminhoImg.size()]();
     }
     QSignalMapper *signalMapper = new QSignalMapper(this);
 
@@ -364,9 +355,9 @@ void MainWindow::slotOpen()
             while(QTime::currentTime() < dieTime)
                 QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 
+            atributosSelecionados[i] = new double [14];
             for(int j = 1; j < 14; j++)
             {
-                atributosSelecionados[i] = new double [14];
                 atributosSelecionados[i][j] = -2;
                 boxCheckeds[j] = false;
                 caixasDeSelecao[j]->setChecked(false);
@@ -374,16 +365,11 @@ void MainWindow::slotOpen()
                 caixaNT->setValue(4);
             }
 
-
             int NG = pow(2, 12);
             matrizCoN_CPU[i] = new double[NG * NG];
-            ath = new Haralick(loader[i].getMatrizOrig(), loader[i].getLargura(), loader[i].getAltura(), NG, caixaNT->value());
-            ath->calcularMatrizCoN(matrizCoN_CPU[i], caixaDMCO->value());
-            ath->atCpu(matrizCoN_CPU[i], NG);
-
-            for(int w = 0; w < NG * NG; w++)
-                std::cout << matrizCoN_CPU[i][w] << std::endl;
-
+            ath[i].HaralickInit(loader[i].getMatrizOrig(), loader[i].getLargura(), loader[i].getAltura(), NG, caixaNT->value());
+            ath[i].calcularMatrizCoN(matrizCoN_CPU[i], caixaDMCO->value());
+            ath[i].atCpu(matrizCoN_CPU[i], NG);
             matrizAct->setEnabled(true);
             spl->finish(this);
         }
@@ -435,11 +421,6 @@ void MainWindow::slotPreview(const int &i)
 
 }
 
-void MainWindow::slotResult()
-{
-    results->exec();
-}
-
 void MainWindow::slotMatriz()
 {
     matriz->exec();
@@ -447,10 +428,6 @@ void MainWindow::slotMatriz()
 
 void MainWindow::slotExtracao()
 {
-    if(results == NULL)
-        results = new GUIResults();
-    //results->limpaGUI();
-
     for(int i = 1; i < 14; i++)
         boxCheckeds[i] = caixasDeSelecao[i]->isChecked();
 
@@ -476,11 +453,11 @@ void MainWindow::slotExtracao()
         QTime dieTime = QTime::currentTime().addMSecs(500);
         while(QTime::currentTime() < dieTime)
             QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+
         for(int i = 0; i < caminhoImg.size(); i++)
-        {
-            ath->setMatrizCon(matrizCoN_CPU[i]);
-            ath->calcATH(atributosSelecionados[i], boxCheckeds);
-        }
+            ath[i].calcATH(atributosSelecionados[i], boxCheckeds);
+
+
         QByteArray ba = dir.toLatin1();
         const char *c_str = ba.data();
 
@@ -491,23 +468,16 @@ void MainWindow::slotExtracao()
         {
             if(boxCheckeds[i])
             {
-                //fprintf(arqSaida, "%s;", nomesATH[i].toStdString());
+                arqSaida << nomesATH[i].toStdString() << ";";
                 for(int j = 0; j < caminhoImg.size(); j++)
-                {
-                    std::cout << atributosSelecionados[j][i] << std::endl;
-                    arqSaida << atributosSelecionados[j][i] << ";";
-                }
+                    arqSaida << std::fixed << atributosSelecionados[j][i] << ";";
             }
             arqSaida << "\n";
         }
         arqSaida.close();
+
         spl->finish(this);
     }
-
-
-
-    results->setAtributos(atributosSelecionados[0], nomesATH, boxCheckeds);
-    resultAct->setEnabled(true);
 }
 
 void MainWindow::slotSelectAll()

@@ -34,7 +34,6 @@ public:
 private:
     Ui::MainWindow *ui;
 
-    GUIResults *results = NULL;
     GUIMatrizCoo *matriz = NULL;
     ImgLoader *loader = NULL;
     double ** matrizCoN_CPU;
@@ -51,9 +50,7 @@ private:
     void createActions();
     void createMenu();
     QMenu *fileMenu;
-    QMenu *resultsMenu;
     QAction *openAct;
-    QAction *resultAct;
     QAction *matrizAct;
     Haralick *ath;
 
@@ -82,7 +79,6 @@ private:
 
 private slots:
     void slotOpen();
-    void slotResult();
     void slotMatriz();
     void slotExtracao();
     void slotMatrizesCoOc0();

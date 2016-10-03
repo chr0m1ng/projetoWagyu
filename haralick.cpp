@@ -1,5 +1,10 @@
 #include "haralick.h"
 
+Haralick::Haralick()
+{
+
+}
+
 Haralick::~Haralick()
 {
 
@@ -227,7 +232,7 @@ double Haralick::P_x_menos_y(const double * __restrict__ p, const int k, int tam
  * Haralick
  */
 
-void Haralick::calcATH(double *&atributosSelecionados, bool * boxCheckeds)
+void Haralick::calcATH(double *atributosSelecionados, bool * boxCheckeds)
 {
     for(int i = 1; i < 14; i++)
     {
@@ -290,11 +295,6 @@ void Haralick::calcATH(double *&atributosSelecionados, bool * boxCheckeds)
     }
 }
 
-void Haralick::setMatrizCon(double *matrizCoN)
-{
-    this->matriz = matrizCoN;
-}
-
 double Haralick::energia()
 {
     int tTotal = this->Ng * this->Ng;
@@ -303,10 +303,8 @@ double Haralick::energia()
 
     #pragma omp parallel for simd reduction(+:energia)
     for(int i = 0; i < tTotal; ++i)
-    {
-        std::cout << matrizCoN[i] << std::endl;
         energia +=  matrizCoN[i] * matrizCoN[i];
-    }
+
     return energia;
 }
 
