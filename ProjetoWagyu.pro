@@ -18,7 +18,6 @@ SOURCES += main.cpp\
     hex2int.cxx \
     readimage.cpp \
     haralick.cpp \
-    guiresults.cpp \
     guimatrizcoo.cpp
 
 HEADERS  += mainwindow.h \
@@ -27,11 +26,9 @@ HEADERS  += mainwindow.h \
     globalvar.h \
     readimage.h \
     haralick.h \
-    guiresults.h \
     guimatrizcoo.h
 
 FORMS    += mainwindow.ui \
-    guiresults.ui \
     guimatrizcoo.ui
 
 QMAKE_CXXFLAGS += -fopenmp
