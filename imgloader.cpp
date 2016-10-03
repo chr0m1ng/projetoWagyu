@@ -14,6 +14,8 @@ ImgLoader::ImgLoader(QWidget *parent) : QWidget(parent)
 
 ImgLoader::~ImgLoader()
 {
+    if(!nome.isNull())
+        QFile::remove(nome);
     delete imgPreview;
 }
 
@@ -69,14 +71,16 @@ bool ImgLoader::carregarImg(int nc, QString caminho)
 {
     this->caminho = caminho;
 
-    if(!caminho.isEmpty())
+    if(!this->caminho.isEmpty())
     {
+
+        int pos = this->caminho.lastIndexOf("/");
+
         //Coloca ./ na frente do .raw
-        int pos = caminho.lastIndexOf("/");
-        caminho.replace(pos, 1, "/./");
+        this->caminho.replace(pos, 1, "/./");
 
         //Conversão de QString para const char *
-        QByteArray ba = caminho.toLatin1();
+        QByteArray ba = this->caminho.toLatin1();
         const char *c_str = ba.data();
 
         ReadImage rImage(c_str, largura, altura);
@@ -96,13 +100,23 @@ bool ImgLoader::carregarImg(int nc, QString caminho)
 
 bool ImgLoader::showImage()
 {
-    if(!caminho.isEmpty())
+    if(!this->caminho.isEmpty() && this->nome.isNull())
     {
         //Salva vetor extraido da imagem .raw em um .txt como se fosse um .pgm
-        FILE *imgRAW = fopen("imgRAW.txt", "w");
+        this->nome = this->caminho;
+        int pos = nome.lastIndexOf("/");
+
+        nome = nome.remove(0, pos + 1);
+
+        nome.replace(nome.lastIndexOf("."), 2, ".txt");
+
+        QByteArray ba = nome.toLatin1();
+        const char *c_str = ba.data();
+
+        FILE *imgRAW = fopen(c_str, "w");
         if(imgRAW == NULL)
         {
-            QMessageBox::information(this, tr("Image Viewer"),tr("Nao foi possivel carregar file %1.").arg(caminho));
+            QMessageBox::information(this, tr("Image Viewer"),tr("Nao foi possivel carregar file 1 %1.").arg(caminho));
             return false;
         }
         fprintf(imgRAW, "P2\n%d %d\n%d\n", altura, largura, (int)pow(2, st_image.vi_bits) - 1);
@@ -113,25 +127,32 @@ bool ImgLoader::showImage()
         fclose(imgRAW);
 
         //Converte o .txt para .pgm
-        QFile::rename("imgRAW.txt", "newImgRAW.pgm");
+        QString pgm = nome;
+
+
+        pgm = pgm.replace(pgm.lastIndexOf("."), 4, ".pgm");
+
+        std::cout << pgm.toStdString() + " 2"<< std::endl;
+
+        QFile::rename(nome, pgm);
 
         //Abre e exibe a imagem no formato .pgm
-        QImage imagem("newImgRAW.pgm", "PGM");
+
+        nome = pgm;
+
+        QImage imagem(nome, "PGM");
         if( imagem.isNull() )
         {
-            QMessageBox::information(this, tr("Image Viewer"),tr("Nao foi possivel carregar %1.").arg(caminho));
+            QMessageBox::information(this, tr("Image Viewer"),tr("Nao foi possivel carregar 2 %1.").arg(caminho));
             return false;
         }
 
         imgPreview -> setPixmap(QPixmap::fromImage(imagem));
         imgPreview -> adjustSize();
-        int pos = caminho.lastIndexOf("/");
-        QString imgNome = caminho.remove(0, pos + 3);
 
-        imgPreview->setToolTip(imgNome);
+        imgPreview->setToolTip(nome);
 
         status = true;
-        QFile::remove("newImgRAW.pgm");
 
 
         return true;

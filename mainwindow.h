@@ -37,9 +37,10 @@ private:
     GUIResults *results = NULL;
     GUIMatrizCoo *matriz = NULL;
     ImgLoader *loader = NULL;
-    double * matrizCoN_CPU;
-    double * atributosSelecionados;
+    double ** matrizCoN_CPU;
+    double ** atributosSelecionados;
     QVector<QString> caminhoImg;
+    bool status;
 
     void carregaCaminho();
 
@@ -89,7 +90,7 @@ private slots:
     void slotMatrizesCoOc90();
     void slotMatrizesCoOc135();
     void slotMatrizesCoOc();
-    void slotPreview(const int &text);
+    void slotPreview(const int &i);
     //Slots CheckBox
     void slotSelectAll();
     void slotATHs();

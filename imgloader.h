@@ -45,6 +45,7 @@ private:
     QLabel *imgPreview = NULL;
     bool status;
     QString caminho;
+    QString nome;
     QImage imgOrig;
     tImage st_image;
     int largura;

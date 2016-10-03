@@ -28,6 +28,8 @@ public:
     int * getMc135();
     int * getMatTot();
 
+    void setMatrizCon(double *matrizCoN);
+
 
 private:
     int * __restrict__ matrizCoF;

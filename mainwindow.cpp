@@ -7,7 +7,6 @@ ui(new Ui::MainWindow)
 {
     caixasDeSelecao = new QCheckBox*[14];
     boxCheckeds = new bool[14];
-    atributosSelecionados = new double[14];
 
     nomesATH[0] = "Selecionar Todos";
     nomesATH[1] = "Energia";
@@ -32,6 +31,7 @@ ui(new Ui::MainWindow)
     frameATH->setEnabled(false);
     frameDMCO->setEnabled(false);
     frameNT->setEnabled(false);
+    status = false;
 
     this->setGeometry(QStyle::alignedRect(Qt::LeftToRight, Qt::AlignCenter, this->size(), qApp->desktop()->availableGeometry()));
 // MENU BAR
@@ -44,6 +44,7 @@ ui(new Ui::MainWindow)
 
 MainWindow::~MainWindow()
 {
+    delete [] loader;
     delete framePreview;
     delete frameATH;
     delete frameDMCO;
@@ -53,7 +54,6 @@ MainWindow::~MainWindow()
     delete caixasDeSelecao;
     delete fileMenu;
     delete ath;
-    delete [] loader;
     delete [] lbImg;
     delete openAct;
     delete resultAct;
@@ -108,7 +108,9 @@ void MainWindow::createActions()
     matrizAct = new QAction(tr("&Matriz"), this);
     matrizAct->setStatusTip(tr("Exibe as Matrizes de Co-ocorência"));
     matrizAct->setEnabled(false);
-    connect(matrizAct, SIGNAL(triggered()), this, SLOT(slotMatriz()));    
+    connect(matrizAct, SIGNAL(triggered()), this, SLOT(slotMatriz()));
+
+
 }
 
 void MainWindow::createMenu()
@@ -304,7 +306,11 @@ void MainWindow::slotOpen()
     int yy = 40;
 
     if(loader == NULL)
+    {
         loader = new ImgLoader[caminhoImg.size()]();
+        matrizCoN_CPU = new double * [caminhoImg.size()];
+        atributosSelecionados = new double * [caminhoImg.size()];
+    }
     QSignalMapper *signalMapper = new QSignalMapper(this);
 
     for(int i = 0; i < caminhoImg.size(); i++)
@@ -360,7 +366,8 @@ void MainWindow::slotOpen()
 
             for(int j = 1; j < 14; j++)
             {
-                atributosSelecionados[j] = -2;
+                atributosSelecionados[i] = new double [14];
+                atributosSelecionados[i][j] = -2;
                 boxCheckeds[j] = false;
                 caixasDeSelecao[j]->setChecked(false);
                 caixaDMCO->setValue(1);
@@ -369,21 +376,63 @@ void MainWindow::slotOpen()
 
 
             int NG = pow(2, 12);
-            matrizCoN_CPU = new double[NG * NG];
+            matrizCoN_CPU[i] = new double[NG * NG];
             ath = new Haralick(loader[i].getMatrizOrig(), loader[i].getLargura(), loader[i].getAltura(), NG, caixaNT->value());
-            ath->calcularMatrizCoN(matrizCoN_CPU, caixaDMCO->value());
-            ath->atCpu(matrizCoN_CPU, NG);
+            ath->calcularMatrizCoN(matrizCoN_CPU[i], caixaDMCO->value());
+            ath->atCpu(matrizCoN_CPU[i], NG);
+
+            for(int w = 0; w < NG * NG; w++)
+                std::cout << matrizCoN_CPU[i][w] << std::endl;
+
             matrizAct->setEnabled(true);
             spl->finish(this);
         }
     }
-
+    status = true;
     connect(signalMapper, SIGNAL(mapped(const int &)), this, SLOT(slotPreview(const int &)));
 }
 
-void MainWindow::slotPreview(const int &text)
+void MainWindow::slotPreview(const int &i)
 {
-    std::cout << text << std::endl;
+    QDesktopWidget t;
+    QRect screenSize = t.availableGeometry(t.primaryScreen());
+    QWidget* wgMat = new QWidget;
+    wgMat->setWindowTitle(lbImg[i].text());
+
+    wgMat->resize(380, 405);
+    wgMat->move(screenSize.width()/2 - wgMat->size().width()/2, screenSize.height()/2 - wgMat->size().height()/2);
+    wgMat->setMinimumSize(wgMat->size());
+    wgMat->setMaximumSize(wgMat->size());
+
+
+    QFrame *framePreview = new QFrame(wgMat);
+    framePreview->setEnabled(true);
+    framePreview->setGeometry(20,20,331,331);
+    framePreview->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    framePreview->setLineWidth(1);
+    framePreview->setFrameShadow(QFrame::Raised);
+    framePreview->setFrameShape(QFrame::StyledPanel);
+    framePreview->setVisible(true);
+
+    QLabel *labelPreview = new QLabel(framePreview);
+    labelPreview->setText("PREVIEW");
+    labelPreview->setGeometry(140,0,71,16);
+    labelPreview->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    labelPreview->setVisible(true);
+
+    QScrollArea *areaPreview = new QScrollArea(framePreview);
+    areaPreview->setGeometry(10,20,311,301);
+    areaPreview->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    areaPreview->setFrameShadow(QFrame::Sunken);
+    areaPreview->setFrameShape(QFrame::StyledPanel);
+    areaPreview->setWidgetResizable(true);
+
+    wgMat->show();
+    loader[i].showImage();
+    QLabel *imgPreview = loader[i].getImgPreview();
+
+    areaPreview->setWidget(imgPreview);
+
 }
 
 void MainWindow::slotResult()
@@ -405,8 +454,9 @@ void MainWindow::slotExtracao()
     for(int i = 1; i < 14; i++)
         boxCheckeds[i] = caixasDeSelecao[i]->isChecked();
 
-    if(loader->getStatus())
+    if(status)
     {
+        QString dir = QFileDialog::getSaveFileName(this, "Salvar Arquivo", QDir::currentPath());
         QPixmap pix("../projetoWagyu/Extras/gifinho.gif");
         if(pix.isNull())
         {
@@ -426,13 +476,37 @@ void MainWindow::slotExtracao()
         QTime dieTime = QTime::currentTime().addMSecs(500);
         while(QTime::currentTime() < dieTime)
             QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+        for(int i = 0; i < caminhoImg.size(); i++)
+        {
+            ath->setMatrizCon(matrizCoN_CPU[i]);
+            ath->calcATH(atributosSelecionados[i], boxCheckeds);
+        }
+        QByteArray ba = dir.toLatin1();
+        const char *c_str = ba.data();
 
-        ath->calcATH(atributosSelecionados, boxCheckeds);
 
+        std::ofstream arqSaida(c_str);
+
+        for(int i = 1; i < 14; i++)
+        {
+            if(boxCheckeds[i])
+            {
+                //fprintf(arqSaida, "%s;", nomesATH[i].toStdString());
+                for(int j = 0; j < caminhoImg.size(); j++)
+                {
+                    std::cout << atributosSelecionados[j][i] << std::endl;
+                    arqSaida << atributosSelecionados[j][i] << ";";
+                }
+            }
+            arqSaida << "\n";
+        }
+        arqSaida.close();
         spl->finish(this);
     }
 
-    results->setAtributos(atributosSelecionados, nomesATH, boxCheckeds);
+
+
+    results->setAtributos(atributosSelecionados[0], nomesATH, boxCheckeds);
     resultAct->setEnabled(true);
 }
 

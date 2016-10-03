@@ -81,7 +81,6 @@ void Haralick::calcularMatrizCoN(double * __restrict__ matrizCoN, int distancia)
     #pragma omp parallel for simd
     for(int i = 0; i < TAM_TOTAL; ++i)
         matrizCoN[i] = (1.0 * matrizCoF[i]) / soma;
-
 }
 
 double Haralick::mediaH(const double * __restrict__ p, int tam)
@@ -291,6 +290,11 @@ void Haralick::calcATH(double *&atributosSelecionados, bool * boxCheckeds)
     }
 }
 
+void Haralick::setMatrizCon(double *matrizCoN)
+{
+    this->matriz = matrizCoN;
+}
+
 double Haralick::energia()
 {
     int tTotal = this->Ng * this->Ng;
@@ -299,8 +303,10 @@ double Haralick::energia()
 
     #pragma omp parallel for simd reduction(+:energia)
     for(int i = 0; i < tTotal; ++i)
+    {
+        std::cout << matrizCoN[i] << std::endl;
         energia +=  matrizCoN[i] * matrizCoN[i];
-
+    }
     return energia;
 }
 
